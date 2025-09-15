@@ -1,0 +1,18 @@
+{
+    "name": "resource-manager-system",
+    "private": true,
+    "version": "1.0.0",
+    "workspaces": [
+        "server",
+        "client"
+    ],
+    "scripts": {
+        "start": "concurrently \"npm run start --workspace=server\" \"npm run dev --workspace=client\"",
+        "build": "npm run build --workspace=server && npm run build --workspace=client",
+        "start-server": "npm run start:dev --workspace=server",
+        "start-client": "npm run dev --workspace=client"
+    },
+    "devDependencies": {
+        "concurrently": "^8.2.2"
+    }
+}
