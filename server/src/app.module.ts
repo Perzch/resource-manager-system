@@ -9,21 +9,22 @@ import { ResponseInterceptor } from './global/interceptors/response.interceptor'
 import { ValidationPipe } from './global/validation.pipe';
 import { CategoriesModule } from './categories/categories.module';
 import { ProductsModule } from './products/products.module';
-import { SalesModule } from './sales/sales.module';
-import { CommonModule } from './common/common.module';
 import { GlobalHttpExceptionFilter } from './global/global.exception';
 import { APP_GUARD } from '@nestjs/core';
 import { AccessTokenGuard } from './global/guards/access-token.guard';
 import { PermissionGuard } from './global/guards/permission.guard';
+import { ConfigModule } from '@nestjs/config';
+import jwtConfig from './config/jwt.config';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
+    ConfigModule.forFeature(jwtConfig),
+    JwtModule.registerAsync(jwtConfig.asProvider()),
     TypeOrmModule.forRoot(OrmConfig),
     AuthModule,
     CategoriesModule,
     ProductsModule,
-    SalesModule,
-    CommonModule,
   ],
   controllers: [AppController],
   providers: [

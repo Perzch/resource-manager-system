@@ -25,6 +25,7 @@ export class AuthService {
 
   async signIn(signInDto: SignInDto) {
     const user = await this.userRepository.findOne({
+      select: ['username', 'id', 'role'],
       where: {
         username: signInDto.username,
         password: signInDto.password,
@@ -37,7 +38,7 @@ export class AuthService {
 
     const payload = {
       sub: user.id,
-      username: user.username,
+      ...user,
     };
 
     return this.jwtService.sign(payload);

@@ -7,10 +7,8 @@ import {
   Between,
   FindManyOptions,
   FindOperator,
-  LessThan,
   LessThanOrEqual,
   Like,
-  MoreThan,
   MoreThanOrEqual,
   Repository,
 } from 'typeorm';
@@ -86,9 +84,6 @@ export class ProductsService {
    */
   async findAllColumn(column: keyof Resource) {
     const result = await this.productRepository.find({
-      where: {
-        stock: MoreThan(0),
-      },
       select: [column],
     });
     return result.map((item) => item[column]);

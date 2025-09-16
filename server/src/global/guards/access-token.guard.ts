@@ -8,8 +8,8 @@ import {
 import { ConfigType } from '@nestjs/config';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
-import { Observable } from 'rxjs';
 import jwtConfig from 'src/config/jwt.config';
+import { AuthService } from '../../auth/auth.service';
 
 /**
  * 访问令牌守卫类，用于保护需要授权的路由。

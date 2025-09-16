@@ -1,10 +1,10 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Post,
   Put,
   Query,
   ValidationPipe,
@@ -12,6 +12,8 @@ import {
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { IsPermission } from '../global/decorators/permission.decorator';
+import { PermissionEnum } from '../global/permissions/permissions.enum';
 
 @Controller('categories')
 export class CategoriesController {
@@ -25,6 +27,7 @@ export class CategoriesController {
   }
 
   @Get()
+  @IsPermission(PermissionEnum.DOWNLOADABLE)
   async findAll(
     @Query('sort') sort: 'asc' | 'desc',
     @Query('sortColumn') sortColumn: string,
