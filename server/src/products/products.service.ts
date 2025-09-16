@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Product } from './entities/product.entity';
+import { Resource } from './entities/product.entity';
 import {
   Between,
   FindManyOptions,
@@ -26,8 +26,8 @@ export class ProductsService {
    * @param productRepository 产品仓库实例
    */
   constructor(
-    @InjectRepository(Product)
-    private readonly productRepository: Repository<Product>,
+    @InjectRepository(Resource)
+    private readonly productRepository: Repository<Resource>,
   ) {}
 
   /**
@@ -64,7 +64,7 @@ export class ProductsService {
       yieldDate,
       category: query.category,
     };
-    const searchOptions: FindManyOptions<Product> = {
+    const searchOptions: FindManyOptions<Resource> = {
       where,
       relations: ['category'],
       skip: page * limit,
@@ -84,7 +84,7 @@ export class ProductsService {
    * @param column 产品的列名
    * @returns 指定列的值数组
    */
-  async findAllColumn(column: keyof Product) {
+  async findAllColumn(column: keyof Resource) {
     const result = await this.productRepository.find({
       where: {
         stock: MoreThan(0),

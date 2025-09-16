@@ -8,10 +8,10 @@ import { ProductsService } from 'src/products/products.service';
 import { CategoriesModule } from 'src/categories/categories.module';
 import { ProductsModule } from 'src/products/products.module';
 import { Category } from 'src/categories/entities/category.entity';
-import { Product } from 'src/products/entities/product.entity';
+import { Resource } from 'src/products/entities/product.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Sale, Category, Product])],
+  imports: [TypeOrmModule.forFeature([Sale, Category, Resource])],
   controllers: [CommonController],
   providers: [CommonService, CategoriesService, ProductsService],
 })

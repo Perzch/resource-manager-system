@@ -1,8 +1,7 @@
-import { OmitType } from '@nestjs/mapped-types';
 import { IsByteLength, IsNotEmpty } from 'class-validator';
-import { User } from 'src/users/entities/user.entity';
+import { UserInterface } from '../../users/entities/user.interface';
 
-export class SignInDto extends OmitType(User, ['id']) {
+export class SignInDto implements UserInterface {
   @IsNotEmpty()
   username: string;
   @IsNotEmpty()

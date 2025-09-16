@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   Put,
@@ -35,7 +34,7 @@ export class CategoriesController {
 
   @Get('names')
   async findAllName() {
-    const categories = await this.categoriesService.findAll();
+    const categories = await this.categoriesService.findAllName();
     return categories;
   }
 

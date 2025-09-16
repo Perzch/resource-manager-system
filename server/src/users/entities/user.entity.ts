@@ -1,9 +1,10 @@
-import Permissions from 'src/global/permissions.enum';
+import { PermissionEnum } from 'src/global/permissions/permissions.enum';
 import { Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { UserInterface } from './user.interface';
 
 @Entity()
 @Unique(['username'])
-export class User {
+export class User implements UserInterface {
   @PrimaryGeneratedColumn()
   id: number;
   @Column()
@@ -11,5 +12,5 @@ export class User {
   @Column()
   password: string;
   @Column()
-  role: Permissions; // 使用位运算表示用户权限
+  role: PermissionEnum; // 使用位运算表示用户权限
 }

@@ -24,6 +24,12 @@ export class CategoriesService {
     });
   }
 
+  async findAllName() {
+    return await this.categoryRepository.find({
+      select: ['name'],
+    });
+  }
+
   async findOne(id: number) {
     return await this.categoryRepository.findOne({
       where: {

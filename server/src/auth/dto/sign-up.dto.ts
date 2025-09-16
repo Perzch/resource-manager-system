@@ -1,7 +1,8 @@
 import { IsByteLength, IsEnum, IsNotEmpty } from 'class-validator';
-import Permissions from 'src/global/permissions.enum';
+import { PermissionEnum } from 'src/global/permissions/permissions.enum';
+import { UserInterface } from '../../users/entities/user.interface';
 
-export class SignUpDto {
+export class SignUpDto implements UserInterface {
   @IsNotEmpty()
   username: string;
   @IsNotEmpty()
@@ -9,6 +10,6 @@ export class SignUpDto {
   // 满足至少一个字母和一个数字的正则表达式
   // @Matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,20}$/)
   password: string;
-  @IsEnum(Permissions)
-  role: Permissions;
+  @IsEnum(PermissionEnum)
+  role: PermissionEnum;
 }

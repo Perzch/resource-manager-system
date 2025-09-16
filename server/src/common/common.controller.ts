@@ -10,7 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CommonService } from './common.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Workbook } from 'exceljs';
-import { Product } from 'src/products/entities/product.entity';
+import { Resource } from 'src/products/entities/product.entity';
 import { CategoriesService } from 'src/categories/categories.service';
 import { ProductsService } from 'src/products/products.service';
 
@@ -96,7 +96,7 @@ export class CommonController {
           nowPrice,
         ] = Array.isArray(row.values) ? row.values : [];
 
-        const product: Product = new Product();
+        const product: Resource = new Resource();
         let category = await this.categoriesService.findByName(
           categoryName as string,
         );
