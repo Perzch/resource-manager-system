@@ -1,5 +1,11 @@
-import { Resource } from 'src/products/entities/product.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Resource } from 'src/resources/entities/resource.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { CategoryInterface } from './category.interface';
 
 @Entity()
@@ -12,7 +18,7 @@ export class Category implements CategoryInterface {
     nullable: true,
   })
   recommend?: string;
-  @Column({ default: new Date(), update: false })
+  @CreateDateColumn()
   createDate?: Date;
 
   @OneToMany(() => Resource, (resource) => resource.category)

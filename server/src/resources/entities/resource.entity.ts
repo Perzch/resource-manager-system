@@ -1,9 +1,17 @@
 import { IsNotEmpty } from 'class-validator';
 import { Category } from 'src/categories/entities/category.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Generated,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { ResourceInterface } from './resource.interface';
 
 @Entity()
-export class Resource {
+export class Resource implements ResourceInterface {
   @PrimaryGeneratedColumn()
   id: number;
   @Column()
@@ -11,15 +19,14 @@ export class Resource {
   name: string;
   @Column({ nullable: true })
   description?: string;
-  @Column()
-  icon?: string;
   @Column({ nullable: true })
-  link?: string;
-  @Column({ default: 0 })
-  viewCount: number;
-  @Column({ default: 0 })
+  icon?: string;
+  @Column()
+  link: string;
+  @Generated('increment')
+  @Column()
   downloadCount: number;
-  @Column({ default: new Date(), update: false })
+  @CreateDateColumn()
   createDate: Date;
   @ManyToOne(() => Category, (category) => category.resources, {
     onDelete: 'CASCADE',

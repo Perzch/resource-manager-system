@@ -8,7 +8,7 @@ import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { ResponseInterceptor } from './global/interceptors/response.interceptor';
 import { ValidationPipe } from './global/validation.pipe';
 import { CategoriesModule } from './categories/categories.module';
-import { ProductsModule } from './products/products.module';
+import { ResourcesModule } from './resources/resources.module';
 import { GlobalHttpExceptionFilter } from './global/global.exception';
 import { APP_GUARD } from '@nestjs/core';
 import { AccessTokenGuard } from './global/guards/access-token.guard';
@@ -24,7 +24,7 @@ import { JwtModule } from '@nestjs/jwt';
     TypeOrmModule.forRoot(OrmConfig),
     AuthModule,
     CategoriesModule,
-    ProductsModule,
+    ResourcesModule,
   ],
   controllers: [AppController],
   providers: [

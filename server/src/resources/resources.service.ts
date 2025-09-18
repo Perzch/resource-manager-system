@@ -1,31 +1,23 @@
 import { Injectable } from '@nestjs/common';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { CreateResourceDto } from './dto/create-resource.dto';
+import { UpdateResourceDto } from './dto/update-resource.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Resource } from './entities/product.entity';
-import {
-  Between,
-  FindManyOptions,
-  FindOperator,
-  LessThanOrEqual,
-  Like,
-  MoreThanOrEqual,
-  Repository,
-} from 'typeorm';
-import { QueryProductDto } from './dto/query-product.dto';
+import { Resource } from './entities/resource.entity';
+import { FindManyOptions, FindOptionsWhere, Like, Repository } from 'typeorm';
+import { QueryResourceDto } from './dto/query-resource.dto';
 
 /**
  * 产品服务类，提供对产品的增删改查操作。
  */
 @Injectable()
-export class ProductsService {
+export class ResourcesService {
   /**
    * 构造函数，注入产品仓库。
-   * @param productRepository 产品仓库实例
+   * @param resourceRepository 产品仓库实例
    */
   constructor(
     @InjectRepository(Resource)
-    private readonly productRepository: Repository<Resource>,
+    private readonly resourceRepository: Repository<Resource>,
   ) {}
 
   /**
@@ -33,9 +25,9 @@ export class ProductsService {
    * @param createProductDto 创建产品的数据传输对象
    * @returns 创建的产品
    */
-  async create(createProductDto: CreateProductDto) {
-    const createdProduct = this.productRepository.create(createProductDto);
-    return await this.productRepository.save(createdProduct);
+  async create(createProductDto: CreateResourceDto) {
+    const createdProduct = this.resourceRepository.create(createProductDto);
+    return await this.resourceRepository.save(createdProduct);
   }
 
   /**
@@ -45,35 +37,22 @@ export class ProductsService {
    * @param limit 每页数量
    * @returns 包含产品数据和总数的对象
    */
-  async findAll(query: QueryProductDto, page: number, limit: number) {
-    let yieldDate: FindOperator<Date>;
-    if (query.startYieldDate && query.endYieldDate) {
-      yieldDate = Between(
-        new Date(query.startYieldDate),
-        new Date(query.endYieldDate),
-      );
-    } else if (query.startYieldDate) {
-      yieldDate = MoreThanOrEqual(new Date(query.startYieldDate));
-    } else if (query.endYieldDate) {
-      yieldDate = LessThanOrEqual(new Date(query.endYieldDate));
-    }
-    const where = {
+  async findAll(query: QueryResourceDto) {
+    const where: FindOptionsWhere<Resource> = {
       name: Like(`%${query.name || ''}%`),
-      yieldDate,
       category: query.category,
     };
     const searchOptions: FindManyOptions<Resource> = {
       where,
       relations: ['category'],
-      skip: page * limit,
-      take: limit,
+      skip: query.page * query.limit,
+      take: query.limit,
       order: {
         [query.sortColumn || 'id']: query.sort || 'ASC',
       },
     };
-
-    const data = await this.productRepository.find(searchOptions);
-    const total = await this.productRepository.count({ where });
+    const data = await this.resourceRepository.find(searchOptions);
+    const total = await this.resourceRepository.count({ where });
     return { data, total };
   }
 
@@ -83,7 +62,7 @@ export class ProductsService {
    * @returns 指定列的值数组
    */
   async findAllColumn(column: keyof Resource) {
-    const result = await this.productRepository.find({
+    const result = await this.resourceRepository.find({
       select: [column],
     });
     return result.map((item) => item[column]);
@@ -95,7 +74,7 @@ export class ProductsService {
    * @returns 查找到的产品数组
    */
   async findByName(name: string) {
-    return await this.productRepository.find({
+    return await this.resourceRepository.find({
       where: {
         name,
       },
@@ -108,7 +87,7 @@ export class ProductsService {
    * @returns 查找到的产品
    */
   async findOne(id: number) {
-    return await this.productRepository.findOne({
+    return await this.resourceRepository.findOne({
       where: {
         id,
       },
@@ -120,11 +99,11 @@ export class ProductsService {
    * @param updateProductDto 更新产品的数据传输对象
    * @returns 更新后的产品
    */
-  async update(updateProductDto: UpdateProductDto) {
-    const product = await this.productRepository.preload({
+  async update(updateProductDto: UpdateResourceDto) {
+    const product = await this.resourceRepository.preload({
       ...updateProductDto,
     });
-    return await this.productRepository.save(product);
+    return await this.resourceRepository.save(product);
   }
 
   /**
@@ -132,7 +111,7 @@ export class ProductsService {
    * @param id 产品ID
    * @returns 删除结果
    */
-  async remove(id: number) {
-    return await this.productRepository.delete(id);
+  async remove(ids: number[]) {
+    return await this.resourceRepository.delete(ids);
   }
 }

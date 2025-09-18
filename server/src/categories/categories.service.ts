@@ -3,7 +3,8 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from './entities/category.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
+import { QueryCategoryDto } from './dto/query-category.dto';
 
 @Injectable()
 export class CategoriesService {
@@ -16,17 +17,22 @@ export class CategoriesService {
     return await this.categoryRepository.save(category);
   }
 
-  async findAll(sort?: string, sortColumn?: string) {
+  async findAll(query: QueryCategoryDto) {
     return await this.categoryRepository.find({
-      order: {
-        [sortColumn || 'id']: sort || 'asc',
+      where: {
+        name: Like(`%${query.name || ''}%`),
       },
+      order: {
+        [query.sortColumn || 'id']: query.sort || 'asc',
+      },
+      skip: query.page * query.limit,
+      take: query.limit,
     });
   }
 
   async findAllName() {
     return await this.categoryRepository.find({
-      select: ['name'],
+      select: ['name', 'id'],
     });
   }
 
@@ -51,7 +57,7 @@ export class CategoriesService {
     return await this.categoryRepository.save(category);
   }
 
-  async remove(id: number) {
-    return await this.categoryRepository.delete(id);
+  async remove(ids: number[]) {
+    return await this.categoryRepository.delete(ids);
   }
 }
