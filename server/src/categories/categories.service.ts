@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category, categoryColumns } from './entities/category.entity';
-import { FindManyOptions, FindOptions, FindOptionsWhere, Like, Repository } from 'typeorm';
+import { FindManyOptions, FindOptionsWhere, Like, Repository } from 'typeorm';
 import { QueryCategoryDto } from './dto/query-category.dto';
+import { CategoryInterface } from './entities/category.interface';
 
 @Injectable()
 export class CategoriesService {
@@ -12,7 +12,7 @@ export class CategoriesService {
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
   ) {}
-  async create(createCategoryDto: CreateCategoryDto) {
+  async create(createCategoryDto: CategoryInterface) {
     const category = this.categoryRepository.create(createCategoryDto);
     return await this.categoryRepository.save(category);
   }
@@ -23,11 +23,13 @@ export class CategoriesService {
     };
     const options: FindManyOptions<Category> = {
       where,
-      select: categoryColumns.filter(col => query.columns?.includes(col) || !query.columns),
+      select: categoryColumns.filter(
+        (col) => query.columns?.includes(col) || !query.columns,
+      ),
       order: {
         [query.sortColumn || 'id']: query.sort || 'asc',
       },
-      skip: query.page * query.limit,
+      skip: (query.page - 1) * query.limit,
       take: query.limit,
     };
     // 处理列选择,只有在columns存在且长度大于0时才处理
@@ -45,6 +47,14 @@ export class CategoriesService {
     return await this.categoryRepository.findOne({
       where: {
         id,
+      },
+    });
+  }
+
+  async findOneByColumn(column: keyof Category, value: any) {
+    return await this.categoryRepository.findOne({
+      where: {
+        [column]: value,
       },
     });
   }

@@ -1,4 +1,10 @@
-import { IsOptional, IsEnum, IsBoolean, IsNotEmpty, IsNumber } from 'class-validator';
+import {
+  IsOptional,
+  IsEnum,
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+} from 'class-validator';
 import { PermissionEnum } from 'src/global/permissions/permissions.enum';
 
 export class UpdateUserDto {

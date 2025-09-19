@@ -25,4 +25,10 @@ export class Category implements CategoryInterface {
   resources?: Resource[];
 }
 
-export const categoryColumns: (keyof Category)[] = ['id','name','recommend','createDate', 'resources'];
+export const categoryColumns: (keyof Category)[] = [
+  'id',
+  'name',
+  'recommend',
+  'createDate',
+  'resources',
+];

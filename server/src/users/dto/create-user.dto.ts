@@ -1,4 +1,4 @@
-import { IsEmpty, IsNotEmpty, IsEnum, IsOptional, IsBoolean } from 'class-validator';
+import { IsEmpty, IsNotEmpty, IsEnum, IsOptional } from 'class-validator';
 import { PermissionEnum } from 'src/global/permissions/permissions.enum';
 import { UserInterface } from '../entities/user.interface';
 

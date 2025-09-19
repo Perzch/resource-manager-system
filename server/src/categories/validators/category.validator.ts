@@ -16,8 +16,12 @@ export class IsCategoryValidConstraint implements ValidatorConstraintInterface {
 
     // 检查是否提供了有效的 id 或 name
     // 对于创建资源，通常需要提供已存在的分类 id 或者分类名称
-    const hasValidId = category.id !== undefined && category.id !== null && category.id > 0;
-    const hasValidName = category.name !== undefined && category.name !== null && category.name.trim() !== '';
+    const hasValidId =
+      category.id !== undefined && category.id !== null && category.id > 0;
+    const hasValidName =
+      category.name !== undefined &&
+      category.name !== null &&
+      category.name.trim() !== '';
 
     return hasValidId || hasValidName;
   }

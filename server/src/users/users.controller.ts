@@ -7,7 +7,6 @@ import {
   Post,
   Put,
   Query,
-  ValidationPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -22,9 +21,7 @@ export class UsersController {
 
   @Post()
   @IsPermission(PermissionEnum.MANAGE)
-  async create(
-    @Body() createUserDto: CreateUserDto,
-  ) {
+  async create(@Body() createUserDto: CreateUserDto) {
     return await this.usersService.create(createUserDto);
   }
 

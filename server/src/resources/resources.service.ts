@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Resource, resourceColumns } from './entities/resource.entity';
 import { FindManyOptions, FindOptionsWhere, Like, Repository } from 'typeorm';
 import { QueryResourceDto } from './dto/query-resource.dto';
-import { Category } from 'src/categories/entities/category.entity';
+import { CategoriesService } from 'src/categories/categories.service';
 
 /**
  * 产品服务类，提供对产品的增删改查操作。
@@ -19,8 +19,7 @@ export class ResourcesService {
   constructor(
     @InjectRepository(Resource)
     private readonly resourceRepository: Repository<Resource>,
-    @InjectRepository(Category)
-    private readonly categoryRepository: Repository<Category>,
+    private readonly categoriesService: CategoriesService,
   ) {}
 
   /**
@@ -30,11 +29,12 @@ export class ResourcesService {
    */
   async create(createProductDto: CreateResourceDto) {
     // 通过id加载分类,如果不存在并且有name则创建新分类
-    const category = this.categoryRepository.preload(createProductDto.category);
+    const category = await this.categoriesService.findOneByColumn(
+      'id',
+      createProductDto.category.id,
+    );
     if (!category) {
-      createProductDto.category = await this.categoryRepository.save(
-        createProductDto.category,
-      );
+      this.categoriesService.create(createProductDto.category);
     }
     const createdProduct = this.resourceRepository.create(createProductDto);
     return await this.resourceRepository.save(createdProduct);
@@ -54,9 +54,11 @@ export class ResourcesService {
     };
     const searchOptions: FindManyOptions<Resource> = {
       where,
-      select: resourceColumns.filter(col => query.columns?.includes(col) || !query.columns),
+      select: resourceColumns.filter(
+        (col) => query.columns?.includes(col) || !query.columns,
+      ),
       relations: ['category'],
-      skip: query.page * query.limit,
+      skip: (query.page - 1) * query.limit,
       take: query.limit,
       order: {
         [query.sortColumn || 'id']: query.sort || 'ASC',

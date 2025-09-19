@@ -21,12 +21,12 @@ export class UsersService {
   async create(createUserDto: CreateUserDto) {
     // 加密密码
     const hashedPassword = this.hashPassword(createUserDto.password);
-    
+
     const user = this.userRepository.create({
       ...createUserDto,
       password: hashedPassword,
     });
-    
+
     return await this.userRepository.save(user);
   }
 
@@ -34,27 +34,29 @@ export class UsersService {
     const where: FindOptionsWhere<User> = {
       username: Like(`%${query.username || ''}%`),
     };
-    
+
     const options: FindManyOptions<User> = {
       where,
-      select: userColumns.filter(col => query.columns?.includes(col) || !query.columns),
+      select: userColumns.filter(
+        (col) => query.columns?.includes(col) || !query.columns,
+      ),
       order: {
         [query.sortColumn || 'id']: query.sort || 'asc',
       },
       skip: (query.page - 1) * query.limit,
       take: query.limit,
     };
-    
+
     // 处理列选择,只有在columns存在且长度大于0时才处理
     // if (query.columns && query.columns.length) {
     //   options.select = query.columns.filter(col => userColumns.includes(col));
     // } else {
     //   options.select = userColumns;
     // }
-    
+
     const data = await this.userRepository.find(options);
     const total = await this.userRepository.count({ where });
-    
+
     return { data, total };
   }
 
@@ -79,7 +81,7 @@ export class UsersService {
     if (updateUserDto.password) {
       updateUserDto.password = this.hashPassword(updateUserDto.password);
     }
-    
+
     const user = await this.userRepository.preload(updateUserDto);
     return await this.userRepository.save(user);
   }

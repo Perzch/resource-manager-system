@@ -35,4 +35,13 @@ export class Resource implements ResourceInterface {
   category: Category;
 }
 
-export const resourceColumns: (keyof Resource)[] = ['id','name','description','icon','link','downloadCount','createDate', 'category'];
+export const resourceColumns: (keyof Resource)[] = [
+  'id',
+  'name',
+  'description',
+  'icon',
+  'link',
+  'downloadCount',
+  'createDate',
+  'category',
+];

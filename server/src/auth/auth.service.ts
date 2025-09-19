@@ -1,4 +1,9 @@
-import { Inject, Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  UnauthorizedException,
+  ConflictException,
+} from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import jwtConfig from 'src/config/jwt.config';
@@ -22,7 +27,9 @@ export class AuthService {
 
   async signUp(signUpDto: SignUpDto) {
     // 检查用户名是否已存在
-    const existingUser = await this.usersService.findByUsername(signUpDto.username);
+    const existingUser = await this.usersService.findByUsername(
+      signUpDto.username,
+    );
     if (existingUser) {
       throw new ConflictException('用户名已存在');
     }
@@ -34,6 +41,7 @@ export class AuthService {
     });
 
     // 返回用户信息（不包含密码）
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...userInfo } = user;
     return userInfo;
   }
@@ -41,7 +49,7 @@ export class AuthService {
   async signIn(signInDto: SignInDto) {
     // 查找用户
     const user = await this.usersService.findByUsername(signInDto.username);
-    
+
     if (!user) {
       throw new UnauthorizedException('用户名或密码错误');
     }

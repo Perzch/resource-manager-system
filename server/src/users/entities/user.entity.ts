@@ -29,4 +29,10 @@ export class User implements UserInterface {
   role: PermissionEnum; // 使用位运算表示用户权限
 }
 
-export const userColumns: (keyof User)[] = ['id', 'username', 'status', 'createDate', 'role'];
+export const userColumns: (keyof User)[] = [
+  'id',
+  'username',
+  'status',
+  'createDate',
+  'role',
+];
