@@ -2,6 +2,7 @@
 import ToForgotPasswordLink from './to-forgot-password-link.vue'
 
 const { axiosInstance } = useAxios()
+const auth = useAuth()
 const params = ref({
   username: '',
   password: '',

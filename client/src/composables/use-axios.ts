@@ -4,6 +4,7 @@ import axios from 'axios'
 import { toast } from 'vue-sonner'
 
 import env from '@/utils/env'
+import { useAuthStore } from '@/stores/auth'
 
 export function useAxios() {
   const axiosInstance = axios.create({
@@ -11,6 +12,10 @@ export function useAxios() {
     timeout: env.VITE_SERVER_API_TIMEOUT,
   })
   axiosInstance.interceptors.request.use((config) => {
+    const authStore = useAuthStore()
+    if (authStore.token) {
+      config.headers.Authorization = `Bearer ${authStore.token}`
+    }
     return config
   }, (error) => {
     return Promise.reject(error)
