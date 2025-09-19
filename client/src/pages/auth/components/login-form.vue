@@ -1,9 +1,16 @@
 <script lang="ts" setup>
-import GitHubButton from './github-button.vue'
-import GoogleButton from './google-button.vue'
-import PrivacyPolicyButton from './privacy-policy-button.vue'
-import TermsOfServiceButton from './terms-of-service-button.vue'
 import ToForgotPasswordLink from './to-forgot-password-link.vue'
+
+const { axiosInstance } = useAxios()
+const params = ref({
+  username: '',
+  password: '',
+})
+async function login() {
+  console.log('login', params.value)
+  const res = await axiosInstance.post('/auth/signin', params.value)
+  console.log('res', res)
+}
 </script>
 
 <template>
@@ -28,7 +35,7 @@ import ToForgotPasswordLink from './to-forgot-password-link.vue'
         <UiLabel for="email">
           Email
         </UiLabel>
-        <UiInput id="email" type="email" placeholder="m@example.com" required />
+        <UiInput id="email" v-model="params.username" type="email" placeholder="m@example.com" />
       </div>
       <div class="grid gap-2">
         <div class="flex items-center justify-between">
@@ -37,26 +44,26 @@ import ToForgotPasswordLink from './to-forgot-password-link.vue'
           </UiLabel>
           <ToForgotPasswordLink />
         </div>
-        <UiInput id="password" type="password" required placeholder="*********" />
+        <UiInput id="password" v-model="params.password" type="password" placeholder="*********" />
       </div>
 
-      <UiButton class="w-full">
+      <UiButton class="w-full" @click="login">
         Login
       </UiButton>
 
-      <UiSeparator label="Or continue with" />
+      <!-- <UiSeparator label="Or continue with" /> -->
 
-      <div class="flex flex-col items-center justify-between gap-4">
+      <!-- <div class="flex flex-col items-center justify-between gap-4">
         <GitHubButton />
         <GoogleButton />
-      </div>
+      </div> -->
 
-      <UiCardDescription>
+      <!-- <UiCardDescription>
         By clicking login, you agree to our
         <TermsOfServiceButton />
         and
         <PrivacyPolicyButton />
-      </UiCardDescription>
+      </UiCardDescription> -->
     </UiCardContent>
   </UiCard>
 </template>
