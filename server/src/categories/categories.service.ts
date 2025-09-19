@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Category } from './entities/category.entity';
-import { Like, Repository } from 'typeorm';
+import { Category, categoryColumns } from './entities/category.entity';
+import { FindManyOptions, FindOptions, FindOptionsWhere, Like, Repository } from 'typeorm';
 import { QueryCategoryDto } from './dto/query-category.dto';
 
 @Injectable()
@@ -18,36 +18,33 @@ export class CategoriesService {
   }
 
   async findAll(query: QueryCategoryDto) {
-    return await this.categoryRepository.find({
-      where: {
-        name: Like(`%${query.name || ''}%`),
-      },
+    const where: FindOptionsWhere<Category> = {
+      name: Like(`%${query.name || ''}%`),
+    };
+    const options: FindManyOptions<Category> = {
+      where,
+      select: categoryColumns.filter(col => query.columns?.includes(col) || !query.columns),
       order: {
         [query.sortColumn || 'id']: query.sort || 'asc',
       },
       skip: query.page * query.limit,
       take: query.limit,
-    });
-  }
-
-  async findAllName() {
-    return await this.categoryRepository.find({
-      select: ['name', 'id'],
-    });
+    };
+    // 处理列选择,只有在columns存在且长度大于0时才处理
+    // if(query.columns && query.columns.length) {
+    //   options.select = query.columns.filter(col => categoryColumns.includes(col));
+    // } else {
+    //   options.select = categoryColumns
+    // }
+    const data = await this.categoryRepository.find(options);
+    const total = await this.categoryRepository.count({ where });
+    return { data, total };
   }
 
   async findOne(id: number) {
     return await this.categoryRepository.findOne({
       where: {
         id,
-      },
-    });
-  }
-
-  async findByName(name: string) {
-    return await this.categoryRepository.findOne({
-      where: {
-        name,
       },
     });
   }

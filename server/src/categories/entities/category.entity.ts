@@ -24,3 +24,5 @@ export class Category implements CategoryInterface {
   @OneToMany(() => Resource, (resource) => resource.category)
   resources?: Resource[];
 }
+
+export const categoryColumns: (keyof Category)[] = ['id','name','recommend','createDate', 'resources'];

@@ -1,14 +1,12 @@
 import { Category } from 'src/categories/entities/category.entity';
 import { Resource } from '../entities/resource.entity';
 import { ResourceInterface } from '../entities/resource.interface';
-import { SortPageParam } from 'src/global/sortPage.param';
+import { GeneralParam } from 'src/global/general.param';
 
 export class QueryResourceDto
-  extends SortPageParam<Resource>
+  extends GeneralParam<Resource>
   implements ResourceInterface
 {
-  name: string;
-  sort: 'asc' | 'desc';
-  sortColumn: keyof Resource;
-  category: Category;
+  name?: string;
+  category?: Category;
 }

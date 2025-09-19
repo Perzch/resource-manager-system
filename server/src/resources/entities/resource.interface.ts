@@ -1,3 +1,5 @@
+import { Category } from "src/categories/entities/category.entity";
+
 export interface ResourceInterface {
   id?: number;
   name?: string;
@@ -5,5 +7,5 @@ export interface ResourceInterface {
   icon?: string;
   link?: string;
   downloadCount?: number;
-  categoryId?: number;
+  category?: Category
 }

@@ -9,6 +9,7 @@ import { ResponseInterceptor } from './global/interceptors/response.interceptor'
 import { ValidationPipe } from './global/validation.pipe';
 import { CategoriesModule } from './categories/categories.module';
 import { ResourcesModule } from './resources/resources.module';
+import { UsersModule } from './users/users.module';
 import { GlobalHttpExceptionFilter } from './global/global.exception';
 import { APP_GUARD } from '@nestjs/core';
 import { AccessTokenGuard } from './global/guards/access-token.guard';
@@ -25,6 +26,7 @@ import { JwtModule } from '@nestjs/jwt';
     AuthModule,
     CategoriesModule,
     ResourcesModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [

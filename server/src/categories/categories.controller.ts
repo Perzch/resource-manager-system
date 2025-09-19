@@ -34,13 +34,6 @@ export class CategoriesController {
     return await this.categoriesService.findAll(query);
   }
 
-  @Get('names')
-  @IsPermission(PermissionEnum.READ)
-  async findAllName() {
-    const categories = await this.categoriesService.findAllName();
-    return categories;
-  }
-
   @Get(':id')
   @IsPermission(PermissionEnum.READ)
   async findOne(@Param('id') id: string) {

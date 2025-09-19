@@ -2,9 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { CreateResourceDto } from './dto/create-resource.dto';
 import { UpdateResourceDto } from './dto/update-resource.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Resource } from './entities/resource.entity';
+import { Resource, resourceColumns } from './entities/resource.entity';
 import { FindManyOptions, FindOptionsWhere, Like, Repository } from 'typeorm';
 import { QueryResourceDto } from './dto/query-resource.dto';
+import { Category } from 'src/categories/entities/category.entity';
 
 /**
  * 产品服务类，提供对产品的增删改查操作。
@@ -18,6 +19,8 @@ export class ResourcesService {
   constructor(
     @InjectRepository(Resource)
     private readonly resourceRepository: Repository<Resource>,
+    @InjectRepository(Category)
+    private readonly categoryRepository: Repository<Category>,
   ) {}
 
   /**
@@ -26,6 +29,13 @@ export class ResourcesService {
    * @returns 创建的产品
    */
   async create(createProductDto: CreateResourceDto) {
+    // 通过id加载分类,如果不存在并且有name则创建新分类
+    const category = this.categoryRepository.preload(createProductDto.category);
+    if (!category) {
+      createProductDto.category = await this.categoryRepository.save(
+        createProductDto.category,
+      );
+    }
     const createdProduct = this.resourceRepository.create(createProductDto);
     return await this.resourceRepository.save(createdProduct);
   }
@@ -44,6 +54,7 @@ export class ResourcesService {
     };
     const searchOptions: FindManyOptions<Resource> = {
       where,
+      select: resourceColumns.filter(col => query.columns?.includes(col) || !query.columns),
       relations: ['category'],
       skip: query.page * query.limit,
       take: query.limit,
@@ -54,31 +65,6 @@ export class ResourcesService {
     const data = await this.resourceRepository.find(searchOptions);
     const total = await this.resourceRepository.count({ where });
     return { data, total };
-  }
-
-  /**
-   * 查找所有产品的指定列。
-   * @param column 产品的列名
-   * @returns 指定列的值数组
-   */
-  async findAllColumn(column: keyof Resource) {
-    const result = await this.resourceRepository.find({
-      select: [column],
-    });
-    return result.map((item) => item[column]);
-  }
-
-  /**
-   * 根据产品名称查找产品。
-   * @param name 产品名称
-   * @returns 查找到的产品数组
-   */
-  async findByName(name: string) {
-    return await this.resourceRepository.find({
-      where: {
-        name,
-      },
-    });
   }
 
   /**

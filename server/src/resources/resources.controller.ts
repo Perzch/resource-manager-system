@@ -34,24 +34,6 @@ export class ResourcesController {
     return await this.productsService.findAll(query);
   }
 
-  @Get('ids')
-  @IsPermission(PermissionEnum.READ)
-  async findAllIds() {
-    return await this.productsService.findAllColumn('id');
-  }
-
-  @Get('names')
-  @IsPermission(PermissionEnum.READ)
-  async findAllNames() {
-    return await this.productsService.findAllColumn('name');
-  }
-
-  @Get('name/:name')
-  @IsPermission(PermissionEnum.READ)
-  async findByName(@Param('name') name: string) {
-    return await this.productsService.findByName(name);
-  }
-
   @Get('/:id')
   @IsPermission(PermissionEnum.READ)
   async findOne(@Param('id') id: string) {
