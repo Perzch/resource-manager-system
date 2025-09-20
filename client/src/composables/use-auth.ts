@@ -10,12 +10,12 @@ export function useAuth() {
   }
 
   function toHome() {
-    router.push({ path: '/workspace' })
+    router.push({ path: '/dashboard' })
   }
 
-  function login(token: string, user: UserInterface) {
+  function login({ accessToken, user }: { accessToken: string, user: UserInterface }) {
     authStore.isLogin = true
-    authStore.token = token
+    authStore.token = accessToken
     authStore.userInfo = user
     toHome()
   }

@@ -1,3 +1,4 @@
+import { UserInterface } from '@/types/type'
 import type { LucideProps } from 'lucide-vue-next'
 import type { FunctionalComponent } from 'vue'
 
@@ -23,11 +24,7 @@ export interface NavGroup {
   items: NavItem[]
 }
 
-export interface User {
-  name: string
-  avatar: string
-  email: string
-}
+export interface User extends UserInterface {}
 
 export interface Team {
   name: string

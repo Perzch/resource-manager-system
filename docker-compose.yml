@@ -1,0 +1,31 @@
+version: '1.0.0'
+name: 'resource-manager'
+services:
+  minio:
+    image: minio/minio
+    container_name: resource-minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./minio/data/:/data
+      - ./minio/config:/root/.minio
+    environment:
+      - MINIO_ROOT_USER=minio 
+      - MINIO_ROOT_PASSWORD=12345678
+    command: server /data --console-address ":9001"
+  postgres:
+    image: postgres:latest
+    container_name: resource-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=123456
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/data
+      - ./postgres/log:/var/log/postgresql
+    logging:
+      options:
+        max-size: "10m"
+        max-file: '3'

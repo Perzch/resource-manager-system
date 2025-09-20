@@ -1,21 +1,25 @@
 <script lang="ts" setup>
-import ToForgotPasswordLink from './to-forgot-password-link.vue'
+import { useLoginMutation } from '@/services/api/auth.api'
 
-const { axiosInstance } = useAxios()
 const auth = useAuth()
+const loginMutation = useLoginMutation()
+
 const params = ref({
   username: '',
   password: '',
 })
+
 async function login() {
-  console.log('login', params.value)
-  const res = await axiosInstance.post('/auth/signin', params.value)
-  console.log('res', res)
+  if (!params.value.username || !params.value.password) {
+    return
+  }
+  const data = await loginMutation.mutateAsync(params.value)
+  auth.login(data)
 }
 </script>
 
 <template>
-  <UiCard class="w-full max-w-sm">
+  <UiCard class="w-full max-w-md">
     <UiCardHeader>
       <UiCardTitle class="text-2xl">
         Login
@@ -43,13 +47,16 @@ async function login() {
           <UiLabel for="password">
             Password
           </UiLabel>
-          <ToForgotPasswordLink />
         </div>
         <UiInput id="password" v-model="params.password" type="password" placeholder="*********" />
       </div>
 
-      <UiButton class="w-full" @click="login">
-        Login
+      <UiButton
+        class="w-full"
+        :disabled="loginMutation.isPending.value || !params.username || !params.password"
+        @click="login"
+      >
+        {{ loginMutation.isPending.value ? 'Logging in...' : 'Login' }}
       </UiButton>
 
       <!-- <UiSeparator label="Or continue with" /> -->
