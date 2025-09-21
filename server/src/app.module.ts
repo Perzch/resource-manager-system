@@ -7,8 +7,8 @@ import { AuthModule } from './auth/auth.module';
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { ResponseInterceptor } from './global/interceptors/response.interceptor';
 import { ValidationPipe } from './global/validation.pipe';
-import { CategoriesModule } from './categories/categories.module';
-import { ResourcesModule } from './resources/resources.module';
+import { CategoryModule } from './categories/category.module';
+import { ResourceModule } from './resources/resource.module';
 import { UsersModule } from './users/users.module';
 import { GlobalHttpExceptionFilter } from './global/global.exception';
 import { APP_GUARD } from '@nestjs/core';
@@ -24,8 +24,8 @@ import { JwtModule } from '@nestjs/jwt';
     JwtModule.registerAsync(jwtConfig.asProvider()),
     TypeOrmModule.forRoot(OrmConfig),
     AuthModule,
-    CategoriesModule,
-    ResourcesModule,
+    CategoryModule,
+    ResourceModule,
     UsersModule,
   ],
   controllers: [AppController],

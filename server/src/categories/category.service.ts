@@ -7,7 +7,7 @@ import { QueryCategoryDto } from './dto/query-category.dto';
 import { CategoryInterface } from './entities/category.interface';
 
 @Injectable()
-export class CategoriesService {
+export class CategoryService {
   constructor(
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,

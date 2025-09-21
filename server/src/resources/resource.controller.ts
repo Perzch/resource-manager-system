@@ -8,29 +8,34 @@ import {
   Query,
   ValidationPipe,
   Put,
+  Request,
+  BadRequestException,
 } from '@nestjs/common';
-import { ResourcesService } from './resources.service';
+import { ResourceService } from './resource.service';
 import { CreateResourceDto } from './dto/create-resource.dto';
 import { UpdateResourceDto } from './dto/update-resource.dto';
 import { QueryResourceDto } from './dto/query-resource.dto';
 import { IsPermission } from 'src/global/decorators/permission.decorator';
 import { PermissionEnum } from 'src/global/permissions/permissions.enum';
 
-@Controller('resources')
-export class ResourcesController {
-  constructor(private readonly productsService: ResourcesService) {}
+@Controller('resource')
+export class ResourceController {
+  constructor(private readonly productsService: ResourceService) {}
 
   @Post()
   @IsPermission(PermissionEnum.WRITE)
   async create(
     @Body(new ValidationPipe()) createResourceDto: CreateResourceDto,
+    @Request() request: any,
   ) {
+    createResourceDto.user = request.user;
     return await this.productsService.create(createResourceDto);
   }
 
   @Get()
   @IsPermission(PermissionEnum.READ)
-  async findAll(@Query() query: QueryResourceDto) {
+  async findAll(@Query() query: QueryResourceDto, @Request() request: any) {
+    query.owner &&= request.user.id;
     return await this.productsService.findAll(query);
   }
 
@@ -42,13 +47,16 @@ export class ResourcesController {
 
   @Put()
   @IsPermission(PermissionEnum.WRITE)
-  update(@Body() updateProductDto: UpdateResourceDto) {
+  update(@Body() updateProductDto: UpdateResourceDto, @Request() request: any) {
+    if (updateProductDto.user.id !== request.user.id) {
+      throw new BadRequestException('只能修改自己的资源');
+    }
     return this.productsService.update(updateProductDto);
   }
 
   @Delete(':ids')
   @IsPermission(PermissionEnum.DELETE)
-  remove(@Param('ids') ids: string) {
-    return this.productsService.remove(ids.split(',').map(Number));
+  remove(@Param('ids') ids: number[]) {
+    return this.productsService.remove(ids);
   }
 }

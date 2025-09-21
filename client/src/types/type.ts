@@ -2,6 +2,7 @@ import type { PermissionEnum } from '@/enums/global'
 
 export interface UserInterface {
   id?: number
+  avatar?: string
   username?: string
   password?: string
   role?: PermissionEnum

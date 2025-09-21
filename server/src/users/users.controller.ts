@@ -15,7 +15,7 @@ import { IsPermission } from '../global/decorators/permission.decorator';
 import { PermissionEnum } from '../global/permissions/permissions.enum';
 import { QueryUserDto } from './dto/query-user.dto';
 
-@Controller('users')
+@Controller('user')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -45,7 +45,7 @@ export class UsersController {
 
   @Delete(':ids')
   @IsPermission(PermissionEnum.ADMIN)
-  async remove(@Param('ids') ids: string) {
-    return await this.usersService.remove(ids.split(',').map(Number));
+  async remove(@Param('ids') ids: number[]) {
+    return await this.usersService.remove(ids);
   }
 }

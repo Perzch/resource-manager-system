@@ -9,4 +9,5 @@ export class QueryResourceDto
 {
   name?: string;
   category?: Category;
+  owner?: number; // 是否只查询当前用户的资源
 }

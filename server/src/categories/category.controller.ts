@@ -9,16 +9,16 @@ import {
   Query,
   ValidationPipe,
 } from '@nestjs/common';
-import { CategoriesService } from './categories.service';
+import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { IsPermission } from '../global/decorators/permission.decorator';
 import { PermissionEnum } from '../global/permissions/permissions.enum';
 import { QueryCategoryDto } from './dto/query-category.dto';
 
-@Controller('categories')
-export class CategoriesController {
-  constructor(private readonly categoriesService: CategoriesService) {}
+@Controller('category')
+export class CategoryController {
+  constructor(private readonly categoriesService: CategoryService) {}
 
   @Post()
   @IsPermission(PermissionEnum.WRITE)
@@ -48,7 +48,7 @@ export class CategoriesController {
 
   @Delete(':ids')
   @IsPermission(PermissionEnum.DELETE)
-  async remove(@Param('ids') ids: string) {
-    return await this.categoriesService.remove(ids.split(',').map(Number));
+  async remove(@Param('ids') ids: number[]) {
+    return await this.categoriesService.remove(ids);
   }
 }

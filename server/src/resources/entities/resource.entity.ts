@@ -9,6 +9,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ResourceInterface } from './resource.interface';
+import { User } from 'src/users/entities/user.entity';
 
 @Entity()
 export class Resource implements ResourceInterface {
@@ -33,6 +34,12 @@ export class Resource implements ResourceInterface {
     nullable: false,
   })
   category: Category;
+
+  @ManyToOne(() => User, (user) => user.resources, {
+    onDelete: 'CASCADE',
+    nullable: false,
+  })
+  user: User;
 }
 
 export const resourceColumns: (keyof Resource)[] = [
@@ -44,4 +51,5 @@ export const resourceColumns: (keyof Resource)[] = [
   'downloadCount',
   'createDate',
   'category',
+  'user',
 ];

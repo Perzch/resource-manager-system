@@ -5,13 +5,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Resource, resourceColumns } from './entities/resource.entity';
 import { FindManyOptions, FindOptionsWhere, Like, Repository } from 'typeorm';
 import { QueryResourceDto } from './dto/query-resource.dto';
-import { CategoriesService } from 'src/categories/categories.service';
+import { CategoryService } from 'src/categories/category.service';
 
 /**
  * 产品服务类，提供对产品的增删改查操作。
  */
 @Injectable()
-export class ResourcesService {
+export class ResourceService {
   /**
    * 构造函数，注入产品仓库。
    * @param resourceRepository 产品仓库实例
@@ -19,7 +19,7 @@ export class ResourcesService {
   constructor(
     @InjectRepository(Resource)
     private readonly resourceRepository: Repository<Resource>,
-    private readonly categoriesService: CategoriesService,
+    private readonly categoriesService: CategoryService,
   ) {}
 
   /**
@@ -51,13 +51,14 @@ export class ResourcesService {
     const where: FindOptionsWhere<Resource> = {
       name: Like(`%${query.name || ''}%`),
       category: query.category,
+      user: query.owner ? { id: query.owner } : undefined,
     };
     const searchOptions: FindManyOptions<Resource> = {
       where,
       select: resourceColumns.filter(
         (col) => query.columns?.includes(col) || !query.columns,
       ),
-      relations: ['category'],
+      relations: ['category', 'user'],
       skip: (query.page - 1) * query.limit,
       take: query.limit,
       order: {

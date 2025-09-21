@@ -15,8 +15,8 @@ export class AppService {
     const fileKey = `${fileType}/${Date.now()}-${Math.random()
       .toString(36)
       .substring(2)}.${fileType}`;
-    const expiresIn = 60 * 60;
-    // 生成一个临时的上传url，有效期为1小时
+    const expiresIn = 60 * 1;
+    // 生成一个临时的上传url，有效期为1分钟
     const presignedUrl = await this.minioClient.presignedPutObject(
       bucketName,
       fileKey,

@@ -32,11 +32,13 @@ const { isMobile, open } = useSidebar()
           >
             <UiAvatar class="size-8 rounded-lg">
               <UiAvatarFallback class="rounded-lg">
-                {{ user.username?.charAt(0).toUpperCase() + user.username?.charAt(1).toUpperCase() }}
+                <UiAvatarImage :src="user.avatar" :alt="user.username" />
+                {{ (user.username?.charAt(0).toUpperCase() || '') + user.username?.charAt(1).toUpperCase() }}
               </UiAvatarFallback>
             </UiAvatar>
             <div class="grid flex-1 text-sm leading-tight text-left">
               <span class="font-semibold truncate">{{ user.username }}</span>
+              <!-- <span class="text-xs truncate">{{ user.email }}</span> -->
             </div>
             <ChevronsUpDown class="ml-auto size-4" />
           </UiSidebarMenuButton>
@@ -50,12 +52,14 @@ const { isMobile, open } = useSidebar()
           <UiDropdownMenuLabel class="p-0 font-normal">
             <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
               <UiAvatar class="size-8 rounded-lg">
+                <UiAvatarImage :src="user.avatar" :alt="user.username" />
                 <UiAvatarFallback class="rounded-lg">
-                  {{ user.username?.charAt(0).toUpperCase() + user.username?.charAt(1).toUpperCase() }}
+                  {{ (user.username?.charAt(0).toUpperCase() || '') + user.username?.charAt(1).toUpperCase() }}
                 </UiAvatarFallback>
               </UiAvatar>
               <div class="grid flex-1 text-sm leading-tight text-left">
                 <span class="font-semibold truncate">{{ user.username }}</span>
+                <!-- <span class="text-xs truncate">{{ user.email }}</span> -->
               </div>
             </div>
           </UiDropdownMenuLabel>
