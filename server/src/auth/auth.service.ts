@@ -73,16 +73,10 @@ export class AuthService {
     };
 
     const accessToken = await this.jwtService.signAsync(payload);
-
+    user.password = '';
     return {
       accessToken: accessToken,
-      user: {
-        id: user.id,
-        username: user.username,
-        role: user.role,
-        status: user.status,
-        createDate: user.createDate,
-      },
+      user,
     };
   }
 }

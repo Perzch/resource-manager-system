@@ -15,7 +15,7 @@ import { Resource } from 'src/resources/entities/resource.entity';
 export class User implements UserInterface {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column({ default: `/avatar/avatar-${Math.floor(Math.random() * 11)}.png` })
+  @Column({ default: `avatar/avatar-${Math.floor(Math.random() * 11)}.png` })
   avatar: string;
   @Column({ unique: true })
   username: string;

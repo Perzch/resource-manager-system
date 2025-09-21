@@ -10,12 +10,18 @@ import {
 } from 'lucide-vue-next'
 
 import { useSidebar } from '@/components/ui/sidebar'
+import env from '@/utils/env'
 
 import type { User } from './types'
 
-const { user } = defineProps<
+const props = defineProps<
   { user: User }
 >()
+const { user } = toRefs(props)
+
+const userAvatar = computed(() => {
+  return user.value.avatar ? `${env.VITE_IMAGE_PREFIX}${user.value.avatar}` : ''
+})
 
 const { logout } = useAuth()
 const { isMobile, open } = useSidebar()
@@ -31,8 +37,8 @@ const { isMobile, open } = useSidebar()
             class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
           >
             <UiAvatar class="size-8 rounded-lg">
+              <UiAvatarImage :src="userAvatar" :alt="user.username" />
               <UiAvatarFallback class="rounded-lg">
-                <UiAvatarImage :src="user.avatar" :alt="user.username" />
                 {{ (user.username?.charAt(0).toUpperCase() || '') + user.username?.charAt(1).toUpperCase() }}
               </UiAvatarFallback>
             </UiAvatar>
@@ -52,7 +58,7 @@ const { isMobile, open } = useSidebar()
           <UiDropdownMenuLabel class="p-0 font-normal">
             <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
               <UiAvatar class="size-8 rounded-lg">
-                <UiAvatarImage :src="user.avatar" :alt="user.username" />
+                <UiAvatarImage :src="userAvatar" :alt="user.username" />
                 <UiAvatarFallback class="rounded-lg">
                   {{ (user.username?.charAt(0).toUpperCase() || '') + user.username?.charAt(1).toUpperCase() }}
                 </UiAvatarFallback>
