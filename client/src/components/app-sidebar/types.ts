@@ -34,7 +34,6 @@ export interface Team {
 }
 
 export interface SidebarData {
-  user: User
   teams: Team[]
   navMain: NavGroup[]
 }
