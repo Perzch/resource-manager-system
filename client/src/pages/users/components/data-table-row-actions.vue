@@ -4,10 +4,10 @@ import type { Component } from 'vue'
 
 import { Ellipsis } from 'lucide-vue-next'
 
-import type { User } from '../data/schema'
+import type { UserInterface } from '@/types/type'
 
 interface DataTableRowActionsProps {
-  row: Row<User>
+  row: Row<UserInterface>
 }
 const props = defineProps<DataTableRowActionsProps>()
 const user = computed(() => props.row.original)
@@ -49,7 +49,6 @@ function handleSelect(command: TCommand) {
         <UiDialogTrigger as-child>
           <UiDropdownMenuItem @click.stop="handleSelect('delete')">
             Delete
-            <UiDropdownMenuShortcut>⌘⌫</UiDropdownMenuShortcut>
           </UiDropdownMenuItem>
         </UiDialogTrigger>
       </UiDropdownMenuContent>

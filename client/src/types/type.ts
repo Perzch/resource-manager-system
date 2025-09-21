@@ -5,6 +5,8 @@ export interface UserInterface {
   avatar?: string
   username?: string
   password?: string
+  status?: boolean
+  createDate?: string
   role?: PermissionEnum
 }
 

@@ -1,12 +1,14 @@
 <script lang="ts" setup>
+import { storeToRefs } from 'pinia'
+
 import { useAuthStore } from '@/stores/auth'
+
 import { sidebarData } from './data/sidebar-data'
 import NavFooter from './nav-footer.vue'
 import NavTeam from './nav-team.vue'
-import TeamSwitcher from './team-switcher.vue'
-import { storeToRefs } from 'pinia'
+
 const auth = useAuthStore()
-const {userInfo} = storeToRefs(auth)
+const { userInfo } = storeToRefs(auth)
 </script>
 
 <template>

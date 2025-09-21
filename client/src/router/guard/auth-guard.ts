@@ -9,7 +9,7 @@ export function authGuard(router: Router) {
   router.beforeEach((to, _from) => {
     const authStore = useAuthStore(pinia)
     const { isLogin } = storeToRefs(authStore)
-    console.log('auth guard', to.meta);
+    console.log('auth guard', to.meta)
     if (to.meta.auth && !unref(isLogin) && to.name !== '/auth/sign-in') {
       return { name: '/auth/sign-in' }
     }

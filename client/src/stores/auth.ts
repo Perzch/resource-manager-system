@@ -1,5 +1,6 @@
-import { UserInterface } from '@/types/type'
 import { defineStore } from 'pinia'
+
+import type { UserInterface } from '@/types/type'
 
 export const useAuthStore = defineStore('user', () => {
   const isLogin = ref(false)

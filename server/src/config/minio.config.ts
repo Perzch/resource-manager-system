@@ -6,4 +6,4 @@ export const minioConfig: ClientOptions = {
   useSSL: false,
   accessKey: 'VaiIkfLCg72zHTO4YMqV',
   secretKey: 'FV7jpFsCUgG1EInrHWLXmAdFiKeoTRespHs39EtL',
-}
+};

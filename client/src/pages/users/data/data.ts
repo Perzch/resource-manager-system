@@ -3,48 +3,50 @@ import { h } from 'vue'
 
 import type { FacetedFilterOption } from '@/components/data-table/types'
 
+import { PermissionEnum } from '@/enums/global'
+
 export const callTypes: (FacetedFilterOption & { style: string })[] = [
   {
     label: 'Active',
-    value: 'active',
+    value: true,
     style: 'bg-teal-100/30 text-teal-900 dark:text-teal-200 border-teal-200',
   },
   {
     label: 'Inactive',
-    value: 'inactive',
+    value: false,
     style: 'bg-neutral-300/40 border-neutral-300',
-  },
-  {
-    label: 'Invited',
-    value: 'invited',
-    style: 'bg-sky-200/40 text-sky-900 dark:text-sky-100 border-sky-300',
-  },
-  {
-    label: 'Suspended',
-    value: 'suspended',
-    style: 'bg-destructive/10 dark:bg-destructive/50 text-destructive dark:text-primary border-destructive/10',
   },
 ]
 
 export const userTypes: FacetedFilterOption[] = [
   {
-    label: 'Superadmin',
-    value: 'superadmin',
+    label: 'ADMIN',
+    value: PermissionEnum.ADMIN,
     icon: h(BadgeDollarSign),
   },
   {
-    label: 'Admin',
-    value: 'admin',
+    label: 'MANAGER',
+    value: PermissionEnum.MANAGE,
     icon: h(Handshake),
   },
   {
-    label: 'Manager',
-    value: 'manager',
-    icon: h(Award),
+    label: 'EDITOR',
+    value: PermissionEnum.UPDATE,
+    icon: h(Shield),
   },
   {
-    label: 'Cashier',
-    value: 'cashier',
+    label: 'BASE',
+    value: PermissionEnum.BASE,
     icon: h(Shield),
+  },
+  {
+    label: 'WRITER',
+    value: PermissionEnum.WRITE,
+    icon: h(Handshake),
+  },
+  {
+    label: 'READER',
+    value: PermissionEnum.READ,
+    icon: h(Award),
   },
 ] as const

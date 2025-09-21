@@ -1,5 +1,6 @@
-import { useAuthStore } from "@/stores/auth"
-import { UserInterface } from "@/types/type"
+import type { UserInterface } from '@/types/type'
+
+import { useAuthStore } from '@/stores/auth'
 
 export function useAuth() {
   const router = useRouter()

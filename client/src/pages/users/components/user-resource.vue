@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import type { User } from '../data/schema'
+import type { UserInterface } from '@/types/type'
 
 import UserForm from './user-form.vue'
 
 const props = defineProps<{
-  user?: User
+  user?: UserInterface
 }>()
 defineEmits(['close'])
 

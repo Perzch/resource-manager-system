@@ -30,22 +30,22 @@ export class UsersService {
     return await this.userRepository.save(user);
   }
 
-  async findAll(query: QueryUserDto) {
-    const where: FindOptionsWhere<User> = {
-      username: Like(`%${query.username || ''}%`),
-    };
+  async findAll() {
+    // const where: FindOptionsWhere<User> = {
+    //   username: Like(`%${query.username || ''}%`),
+    // };
 
-    const options: FindManyOptions<User> = {
-      where,
-      select: userColumns.filter(
-        (col) => query.columns?.includes(col) || !query.columns,
-      ),
-      order: {
-        [query.sortColumn || 'id']: query.sort || 'asc',
-      },
-      skip: (query.page - 1) * query.limit,
-      take: query.limit,
-    };
+    // const options: FindManyOptions<User> = {
+    //   where,
+    //   select: userColumns.filter(
+    //     (col) => query.columns?.includes(col) || !query.columns,
+    //   ),
+    //   order: {
+    //     [query.sortColumn || 'id']: query.sort || 'asc',
+    //   },
+    //   skip: (query.page - 1) * query.limit,
+    //   take: query.limit,
+    // };
 
     // 处理列选择,只有在columns存在且长度大于0时才处理
     // if (query.columns && query.columns.length) {
@@ -54,8 +54,8 @@ export class UsersService {
     //   options.select = userColumns;
     // }
 
-    const data = await this.userRepository.find(options);
-    const total = await this.userRepository.count({ where });
+    const data = await this.userRepository.find();
+    const total = await this.userRepository.count();
 
     return { data, total };
   }

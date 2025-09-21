@@ -1,21 +1,27 @@
 <script lang="ts" setup>
 import { toast } from 'vue-sonner'
 
-import type { User } from '../data/schema'
+import type { UserInterface } from '@/types/type'
+
+import { useDeleteUsersMutation, useGetUsersQuery } from '@/services/api/users.api'
 
 const { user } = defineProps<{
-  user: User
+  user: UserInterface
 }>()
 
 const emits = defineEmits<{
   (e: 'remove'): void
 }>()
 
-function handleRemove() {
+const deleteUsersMutation = useDeleteUsersMutation()
+const getUsersQuery = useGetUsersQuery()
+
+async function handleRemove() {
   toast(`The following task has been deleted:`, {
     description: h('pre', { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' }, h('code', { class: 'text-white' }, JSON.stringify(user, null, 2))),
   })
-
+  await deleteUsersMutation.mutateAsync([user.id])
+  getUsersQuery.refetch()
   emits('remove')
 }
 </script>

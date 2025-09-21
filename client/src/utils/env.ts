@@ -14,6 +14,7 @@ const EnvSchema = z.object({
   VITE_SERVER_API_URL: z.url(),
   VITE_SERVER_API_PREFIX: z.string(),
   VITE_SERVER_API_TIMEOUT: z.coerce.number().default(5000),
+  VITE_IMAGE_PREFIX: z.url(),
 })
 
 export type env = z.infer<typeof EnvSchema>

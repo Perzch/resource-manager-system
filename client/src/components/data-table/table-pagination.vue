@@ -24,7 +24,7 @@ defineProps<DataTablePaginationProps>()
         </p>
         <UiSelect
           :model-value="`${table.getState().pagination.pageSize}`"
-          @update:model-value="Number(table.setPageSize)"
+          @update:model-value="(value) => table.setPageSize(Number(value))"
         >
           <UiSelectTrigger class="h-8 w-[70px]">
             <UiSelectValue :placeholder="`${table.getState().pagination.pageSize}`" />

@@ -6,14 +6,12 @@ import {
   Param,
   Post,
   Put,
-  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { IsPermission } from '../global/decorators/permission.decorator';
 import { PermissionEnum } from '../global/permissions/permissions.enum';
-import { QueryUserDto } from './dto/query-user.dto';
 
 @Controller('user')
 export class UsersController {
@@ -27,8 +25,8 @@ export class UsersController {
 
   @Get()
   @IsPermission(PermissionEnum.MANAGE)
-  async findAll(@Query() query: QueryUserDto) {
-    return await this.usersService.findAll(query);
+  async findAll() {
+    return await this.usersService.findAll();
   }
 
   @Get(':id')
@@ -45,7 +43,13 @@ export class UsersController {
 
   @Delete(':ids')
   @IsPermission(PermissionEnum.ADMIN)
-  async remove(@Param('ids') ids: number[]) {
+  async remove(@Param('ids') idsParam: string) {
+    const ids = idsParam
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .map((s) => Number(s))
+      .filter((n) => !Number.isNaN(n));
     return await this.usersService.remove(ids);
   }
 }

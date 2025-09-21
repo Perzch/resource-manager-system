@@ -1,6 +1,7 @@
-import { UserInterface } from '@/types/type'
 import type { LucideProps } from 'lucide-vue-next'
 import type { FunctionalComponent } from 'vue'
+
+import type { UserInterface } from '@/types/type'
 
 type NavIcon = FunctionalComponent<LucideProps, Record<any, any>, any, Record<any, any>>
 
