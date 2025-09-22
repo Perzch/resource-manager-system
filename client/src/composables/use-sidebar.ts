@@ -47,6 +47,11 @@ export function useSidebar() {
           icon: Users,
         },
         {
+          title: 'Categories',
+          url: '/categories',
+          icon: Component,
+        },
+        {
           title: 'Resources',
           url: '/resources',
           icon: Component,

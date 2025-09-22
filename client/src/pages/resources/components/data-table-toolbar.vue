@@ -3,11 +3,13 @@ import type { Table } from '@tanstack/vue-table'
 
 import { X } from 'lucide-vue-next'
 
+import DataTableFacetedFilter from '@/components/data-table/faceted-filter.vue'
 import DataTableViewOptions from '@/components/data-table/view-options.vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
 import type { ResourceInterface } from '@/types/type'
+import { useCategoryOptions } from '../data/data'
 
 interface DataTableToolbarProps {
   table: Table<ResourceInterface>
@@ -16,6 +18,7 @@ interface DataTableToolbarProps {
 const props = defineProps<DataTableToolbarProps>()
 
 const isFiltered = computed(() => props.table.getState().columnFilters.length > 0)
+const { categoryOptions } = useCategoryOptions()
 </script>
 
 <template>
@@ -26,6 +29,13 @@ const isFiltered = computed(() => props.table.getState().columnFilters.length > 
         :model-value="(table.getColumn('name')?.getFilterValue() as string) ?? ''"
         class="h-8 w-[150px] lg:w-[250px]"
         @input="table.getColumn('name')?.setFilterValue($event.target.value)"
+      />
+      
+      <DataTableFacetedFilter
+        v-if="table.getColumn('category')"
+        :column="table.getColumn('category')"
+        title="Category"
+        :options="categoryOptions"
       />
 
       <Button

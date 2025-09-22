@@ -48,7 +48,8 @@ export class CategoryController {
 
   @Delete(':ids')
   @IsPermission(PermissionEnum.DELETE)
-  async remove(@Param('ids') ids: number[]) {
-    return await this.categoriesService.remove(ids);
+  async remove(@Param('ids') ids: string) {
+    const idsArray = ids.split(',').map((id) => +id);
+    return await this.categoriesService.remove(idsArray);
   }
 }

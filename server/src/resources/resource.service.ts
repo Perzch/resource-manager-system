@@ -83,6 +83,10 @@ export class ResourceService {
     });
   }
 
+  async download(id: number) {
+    await this.resourceRepository.increment({ id }, 'downloadCount', 1)
+  }
+
   /**
    * 更新产品信息。
    * @param updateProductDto 更新产品的数据传输对象

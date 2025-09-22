@@ -13,7 +13,8 @@ export interface UserInterface {
 export interface CategoryInterface {
   id?: number
   name?: string
-  description?: string
+  recommend?: string
+  createDate?: string
 }
 
 export interface ResourceInterface {

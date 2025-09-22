@@ -77,3 +77,14 @@ export function useDeleteResourcesMutation() {
     },
   })
 }
+
+export function useDownloadResourceMutation() {
+  const { axiosInstance } = useAxios()
+  return useMutation<any, AxiosError, number>({
+    mutationKey: ['downloadResource'],
+    mutationFn: async (id: number) => {
+      const { data } = await axiosInstance.get(`/resource/download/${id}`)
+      return data
+    },
+  })
+}

@@ -30,6 +30,7 @@ declare module 'vue-router/auto-routes' {
     '/auth/sign-in-2': RouteRecordInfo<'/auth/sign-in-2', '/auth/sign-in-2', Record<never, never>, Record<never, never>>,
     '/auth/sign-up': RouteRecordInfo<'/auth/sign-up', '/auth/sign-up', Record<never, never>, Record<never, never>>,
     '/billing/': RouteRecordInfo<'/billing/', '/billing', Record<never, never>, Record<never, never>>,
+    '/categories/': RouteRecordInfo<'/categories/', '/categories', Record<never, never>, Record<never, never>>,
     '/dashboard/': RouteRecordInfo<'/dashboard/', '/dashboard', Record<never, never>, Record<never, never>>,
     '/errors': RouteRecordInfo<'/errors', '/errors', Record<never, never>, Record<never, never>, '/errors/' | '/errors/401' | '/errors/403' | '/errors/404' | '/errors/500' | '/errors/503'>,
     '/errors/': RouteRecordInfo<'/errors/', '/errors', Record<never, never>, Record<never, never>>,
@@ -109,6 +110,10 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/billing/index.vue': {
       routes: '/billing/'
+      views: never
+    }
+    'src/pages/categories/index.vue': {
+      routes: '/categories/'
       views: never
     }
     'src/pages/dashboard/index.vue': {

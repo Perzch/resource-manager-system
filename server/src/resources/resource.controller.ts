@@ -45,6 +45,12 @@ export class ResourceController {
     return await this.productsService.findOne(+id);
   }
 
+  @Get('download/:id')
+  @IsPermission(PermissionEnum.READ)
+  async download(@Param('id') id: string) {
+    return await this.productsService.download(+id);
+  }
+
   @Put()
   @IsPermission(PermissionEnum.WRITE)
   update(@Body() updateProductDto: UpdateResourceDto, @Request() request: any) {
@@ -55,11 +61,9 @@ export class ResourceController {
   }
 
   @Delete(':ids')
-  @IsPermission(PermissionEnum.UPDATE)
-  remove(@Param('ids') ids: number[], @Request() request: any) {
-    if (ids.includes(request.user.id)) {
-      throw new BadRequestException('不能删除自己的资源');
-    }
-    return this.productsService.remove(ids);
+  @IsPermission(PermissionEnum.DELETE)
+  remove(@Param('ids') ids: string, @Request() request: any) {
+    const idsArray = ids.split(',').map((id) => +id);
+    return this.productsService.remove(idsArray);
   }
 }
