@@ -35,6 +35,10 @@ export function useAxios() {
         position: 'top-center',
       })
     }
+    if (error.status === 401) {
+      const authStore = useAuthStore()
+      authStore.logout()
+    }
     return Promise.reject(error)
   })
 

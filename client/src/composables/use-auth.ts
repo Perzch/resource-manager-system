@@ -7,6 +7,9 @@ export function useAuth() {
   const authStore = useAuthStore()
 
   function logout() {
+    authStore.isLogin = false
+    authStore.token = ''
+    authStore.userInfo = {}
     router.push({ path: '/auth/sign-in' })
   }
 

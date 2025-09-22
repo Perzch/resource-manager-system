@@ -41,6 +41,7 @@ declare module 'vue-router/auto-routes' {
     '/help-center': RouteRecordInfo<'/help-center', '/help-center', Record<never, never>, Record<never, never>>,
     '/marketing/': RouteRecordInfo<'/marketing/', '/marketing', Record<never, never>, Record<never, never>>,
     '/marketing/hello': RouteRecordInfo<'/marketing/hello', '/marketing/hello', Record<never, never>, Record<never, never>>,
+    '/resources/': RouteRecordInfo<'/resources/', '/resources', Record<never, never>, Record<never, never>>,
     '/settings/': RouteRecordInfo<'/settings/', '/settings', Record<never, never>, Record<never, never>>,
     '/settings/account': RouteRecordInfo<'/settings/account', '/settings/account', Record<never, never>, Record<never, never>>,
     '/settings/appearance': RouteRecordInfo<'/settings/appearance', '/settings/appearance', Record<never, never>, Record<never, never>>,
@@ -152,6 +153,10 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/marketing/hello.vue': {
       routes: '/marketing/hello'
+      views: never
+    }
+    'src/pages/resources/index.vue': {
+      routes: '/resources/'
       views: never
     }
     'src/pages/settings/index.vue': {

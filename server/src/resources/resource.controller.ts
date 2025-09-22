@@ -55,8 +55,11 @@ export class ResourceController {
   }
 
   @Delete(':ids')
-  @IsPermission(PermissionEnum.DELETE)
-  remove(@Param('ids') ids: number[]) {
+  @IsPermission(PermissionEnum.UPDATE)
+  remove(@Param('ids') ids: number[], @Request() request: any) {
+    if (ids.includes(request.user.id)) {
+      throw new BadRequestException('不能删除自己的资源');
+    }
     return this.productsService.remove(ids);
   }
 }

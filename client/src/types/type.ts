@@ -10,6 +10,24 @@ export interface UserInterface {
   role?: PermissionEnum
 }
 
+export interface CategoryInterface {
+  id?: number
+  name?: string
+  description?: string
+}
+
+export interface ResourceInterface {
+  id?: number
+  name?: string
+  description?: string
+  icon?: string
+  link?: string
+  downloadCount?: number
+  createDate?: string
+  category?: CategoryInterface
+  user?: UserInterface
+}
+
 export interface ResponseData<T> {
   code: number
   message: string

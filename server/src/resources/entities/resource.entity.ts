@@ -4,7 +4,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  Generated,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -20,12 +19,9 @@ export class Resource implements ResourceInterface {
   name: string;
   @Column({ nullable: true })
   description?: string;
-  @Column({ nullable: true })
-  icon?: string;
   @Column()
   link: string;
-  @Generated('increment')
-  @Column()
+  @Column({ default: 0 })
   downloadCount: number;
   @CreateDateColumn()
   createDate: Date;
@@ -46,7 +42,6 @@ export const resourceColumns: (keyof Resource)[] = [
   'id',
   'name',
   'description',
-  'icon',
   'link',
   'downloadCount',
   'createDate',

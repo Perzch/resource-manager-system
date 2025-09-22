@@ -47,6 +47,11 @@ export function useSidebar() {
           icon: Users,
         },
         {
+          title: 'Resources',
+          url: '/resources',
+          icon: Component,
+        },
+        {
           title: 'Ai Talk Example',
           url: '/ai-talk',
           icon: Podcast,
