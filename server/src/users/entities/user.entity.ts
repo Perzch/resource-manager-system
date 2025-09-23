@@ -43,5 +43,4 @@ export const userColumns: (keyof User)[] = [
   'status',
   'createDate',
   'role',
-  'resources',
 ];

@@ -20,7 +20,9 @@ async function handleRemove() {
   toast(`The following task has been deleted:`, {
     description: h('pre', { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' }, h('code', { class: 'text-white' }, JSON.stringify(user, null, 2))),
   })
-  await deleteUsersMutation.mutateAsync([user.id])
+  if (user.id) {
+    await deleteUsersMutation.mutateAsync(user.id)
+  }
   getUsersQuery.refetch()
   emits('remove')
 }

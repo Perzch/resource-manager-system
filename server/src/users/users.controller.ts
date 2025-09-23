@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -6,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Request,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -19,7 +21,8 @@ export class UsersController {
 
   @Post()
   @IsPermission(PermissionEnum.MANAGE)
-  async create(@Body() createUserDto: CreateUserDto) {
+  async create(@Body() createUserDto: CreateUserDto) { 
+    createUserDto.password ??= '123456';
     return await this.usersService.create(createUserDto);
   }
 
@@ -36,20 +39,18 @@ export class UsersController {
   }
 
   @Put()
-  @IsPermission(PermissionEnum.MANAGE)
-  async update(@Body() updateUserDto: UpdateUserDto) {
+  @IsPermission(PermissionEnum.READ)
+  async update(@Body() updateUserDto: UpdateUserDto, @Request() request:any) {
+    if(request.user.id !== updateUserDto.id && (request.user.role & PermissionEnum.ADMIN) !== PermissionEnum.ADMIN) {
+      // 只能修改自己的信息，除非是管理员
+      throw new BadRequestException('只能修改自己的信息');
+    }
     return await this.usersService.update(updateUserDto);
   }
 
-  @Delete(':ids')
+  @Delete(':id')
   @IsPermission(PermissionEnum.ADMIN)
-  async remove(@Param('ids') idsParam: string) {
-    const ids = idsParam
-      .split(',')
-      .map((s) => s.trim())
-      .filter(Boolean)
-      .map((s) => Number(s))
-      .filter((n) => !Number.isNaN(n));
-    return await this.usersService.remove(ids);
+  async remove(@Param('id') id: string) {;
+    return await this.usersService.remove(+id);
   }
 }

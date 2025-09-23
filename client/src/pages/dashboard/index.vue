@@ -3,8 +3,16 @@ import { toast } from 'vue-sonner'
 
 import Page from '@/components/global-layout/basic-page.vue'
 import { Button } from '@/components/ui/button'
+import { PermissionEnum } from '@/enums/global'
 
 import OverviewContent from './components/overview-content.vue'
+
+definePage({
+  meta: {
+    auth: true,
+    role: PermissionEnum.READ
+  }
+})
 
 const tabs = ref([
   { name: 'Overview', value: 'overview' },
@@ -22,18 +30,8 @@ const activeTab = ref(tabs.value[0].value)
     description="workspace description"
     sticky
   >
-    <template #actions>
-      <Button
-        @click="() => toast('hello', {
-          position: 'top-center',
-        })"
-      >
-        Download
-      </Button>
-    </template>
-
     <UiTabs :default-value="activeTab" class="w-full">
-      <UiTabsList>
+      <!-- <UiTabsList>
         <UiTabsTrigger
           v-for="tab in tabs" :key="tab.value"
           :value="tab.value"
@@ -41,7 +39,7 @@ const activeTab = ref(tabs.value[0].value)
         >
           {{ tab.name }}
         </UiTabsTrigger>
-      </UiTabsList>
+      </UiTabsList> -->
       <UiTabsContent value="overview" class="space-y-4">
         <OverviewContent />
       </UiTabsContent>

@@ -48,22 +48,21 @@ onMounted(() => {
 const formSchema = z.object({
   id: z.number().optional(),
   username: z.string().min(1).default(user?.username || ''),
-  password: z.string().min(6).default(''),
   status: z.boolean().default(user?.status || true),
   role: z.number().default(user?.role || PermissionEnum.READ),
-  avatar: z.string().optional().default(user?.avatar || ''),
+  avatar: z.string().optional(),
 })
 
 const userInviteFormSchema = toTypedSchema(formSchema)
 const { handleSubmit, setFieldValue } = useForm({
   validationSchema: userInviteFormSchema,
-  initialValues: {},
+  initialValues: user,
 })
 
 function removeAvatar() {
   avatarPreview.value = ''
   avatarUrl.value = ''
-  setFieldValue('avatar', '')
+  setFieldValue('avatar', undefined)
   if (fileInputRef.value) {
     fileInputRef.value.value = ''
   }
@@ -214,7 +213,7 @@ const onSubmit = handleSubmit(async (values) => {
       </FormItem>
     </FormField>
 
-    <FormField v-slot="{ componentField }" name="password">
+    <!-- <FormField v-slot="{ componentField }" name="password">
       <FormItem>
         <FormLabel>Password</FormLabel>
         <FormControl>
@@ -222,7 +221,7 @@ const onSubmit = handleSubmit(async (values) => {
         </FormControl>
         <FormMessage />
       </FormItem>
-    </FormField>
+    </FormField> -->
 
     <FormField v-slot="{ componentField }" name="status">
       <FormItem>

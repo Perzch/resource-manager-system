@@ -4,6 +4,7 @@ import {
   IsBoolean,
   IsNotEmpty,
   IsNumber,
+  IsString,
 } from 'class-validator';
 import { PermissionEnum } from 'src/global/permissions/permissions.enum';
 
@@ -18,6 +19,10 @@ export class UpdateUserDto {
   @IsOptional()
   @IsNotEmpty({ message: '密码不能为空' })
   password?: string;
+
+  @IsOptional()
+  @IsString({ message: '头像必须是字符串' })
+  avatar?: string;
 
   @IsOptional()
   @IsEnum(PermissionEnum, { message: '无效的权限枚举值' })

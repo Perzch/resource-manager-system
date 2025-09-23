@@ -72,33 +72,13 @@ const { isMobile, open } = useSidebar()
 
           <UiDropdownMenuSeparator />
           <UiDropdownMenuGroup>
-            <UiDropdownMenuItem @click="$router.push('/billing/')">
-              <Sparkles />
-              Upgrade to Pro
-            </UiDropdownMenuItem>
-          </UiDropdownMenuGroup>
-
-          <UiDropdownMenuSeparator />
-          <UiDropdownMenuGroup>
-            <UiDropdownMenuItem @click="$router.push('/billing?type=billing')">
-              <CreditCard />
-              Billing
-            </UiDropdownMenuItem>
-          </UiDropdownMenuGroup>
-
-          <UiDropdownMenuSeparator />
-          <UiDropdownMenuGroup>
             <UiDropdownMenuItem @click="$router.push('/settings/')">
               <UserRoundCog />
               Profile
             </UiDropdownMenuItem>
-            <UiDropdownMenuItem @click="$router.push('/settings/account')">
+            <UiDropdownMenuItem @click="$router.push('/settings/appearance')">
               <BadgeCheck />
-              Account
-            </UiDropdownMenuItem>
-            <UiDropdownMenuItem @click="$router.push('/settings/notifications')">
-              <Bell />
-              Notifications
+              Appearance
             </UiDropdownMenuItem>
           </UiDropdownMenuGroup>
 

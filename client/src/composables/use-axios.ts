@@ -5,6 +5,7 @@ import { toast } from 'vue-sonner'
 
 import { useAuthStore } from '@/stores/auth'
 import env from '@/utils/env'
+import router from '@/router'
 
 export function useAxios() {
   const axiosInstance = axios.create({
@@ -38,6 +39,12 @@ export function useAxios() {
     if (error.status === 401) {
       const authStore = useAuthStore()
       authStore.logout()
+    } else if (error.status === 403) {
+      router.push({ path: '/errors/403' })
+    } else if (error.status === 404) {
+      router.push({ path: '/errors/404' })
+    } else if (error.status && error.status >= 500) {
+      router.push({ path: '/errors/500' })
     }
     return Promise.reject(error)
   })

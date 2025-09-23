@@ -52,6 +52,7 @@ declare module 'vue' {
     MarketingLogos: typeof import('./../components/marketing/logos.vue')['default']
     MarketingPricingPlans: typeof import('./../components/marketing/pricing-plans/index.vue')['default']
     MarketingSetup: typeof import('./../components/marketing/setup.vue')['default']
+    PermissionDemo: typeof import('./../components/permission-demo.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SignInButton: typeof import('./../components/sign-in-button.vue')['default']

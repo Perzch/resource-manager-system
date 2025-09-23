@@ -67,11 +67,10 @@ export function useUpdateUserMutation() {
 export function useDeleteUsersMutation() {
   const { axiosInstance } = useAxios()
   // server expects /user/:ids where :ids could be an array path param; we'll send comma-separated list
-  return useMutation<any, AxiosError, number[]>({
+  return useMutation<any, AxiosError, number>({
     mutationKey: ['deleteUsers'],
-    mutationFn: async (ids: number[]) => {
-      const idsParam = ids.join(',')
-      const { data } = await axiosInstance.delete(`/user/${idsParam}`)
+    mutationFn: async (id: number) => {
+      const { data } = await axiosInstance.delete(`/user/${id}`)
       return data
     },
   })

@@ -17,6 +17,7 @@ import { PermissionGuard } from './global/guards/permission.guard';
 import { ConfigModule } from '@nestjs/config';
 import jwtConfig from './config/jwt.config';
 import { JwtModule } from '@nestjs/jwt';
+import { StatisticModule } from './statistic/statistic.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { JwtModule } from '@nestjs/jwt';
     CategoryModule,
     ResourceModule,
     UsersModule,
+    StatisticModule,
   ],
   controllers: [AppController],
   providers: [

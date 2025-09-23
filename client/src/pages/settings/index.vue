@@ -5,6 +5,8 @@ import SettingsLayout from './components/settings-layout.vue'
 
 <template>
   <SettingsLayout>
-    <ProfileForm />
+    <div class="space-y-8">
+      <ProfileForm />
+    </div>
   </SettingsLayout>
 </template>

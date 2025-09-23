@@ -3,10 +3,18 @@ import type { CategoryInterface } from '@/types/type'
 
 import Page from '@/components/global-layout/basic-page.vue'
 import { useGetCategoriesQuery } from '@/services/api/categories.api'
+import { PermissionEnum } from '@/enums/global'
 
 import { columns } from './components/columns'
 import CategoryCreate from './components/category-create.vue'
 import DataTable from './components/data-table.vue'
+
+definePage({
+  meta: {
+    auth: true,
+    role: PermissionEnum.WRITE
+  }
+})
 
 const { data, isPending } = useGetCategoriesQuery()
 
@@ -25,7 +33,8 @@ const loading = computed(() => isPending.value)
     sticky
   >
     <template #actions>
-      <CategoryCreate />
+      <!-- 只有管理者才能创建分类 -->
+      <CategoryCreate v-permission="PermissionEnum.WRITE" />
     </template>
     <div class="overflow-x-auto">
       <DataTable

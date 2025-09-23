@@ -36,6 +36,9 @@ export default defineConfig({
       imports: [
         'vue',
         VueRouterAutoImports,
+        {
+          'unplugin-vue-router': ['definePage']
+        }
       ], // 自动加载 vue,vue-router api
       dirs: [
         'src/composables/**/*.ts',

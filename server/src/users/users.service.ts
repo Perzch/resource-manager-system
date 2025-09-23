@@ -1,11 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User, userColumns } from './entities/user.entity';
-import { FindManyOptions, FindOptionsWhere, Like, Repository } from 'typeorm';
+import { FindManyOptions, FindOptionsWhere, In, Like, Not, Repository } from 'typeorm';
 import { QueryUserDto } from './dto/query-user.dto';
 import { createHash } from 'crypto';
+import { PermissionEnum } from 'src/global/permissions/permissions.enum';
 
 @Injectable()
 export class UsersService {
@@ -21,7 +22,6 @@ export class UsersService {
   async create(createUserDto: CreateUserDto) {
     // 加密密码
     const hashedPassword = this.hashPassword(createUserDto.password);
-
     const user = this.userRepository.create({
       ...createUserDto,
       password: hashedPassword,
@@ -54,7 +54,9 @@ export class UsersService {
     //   options.select = userColumns;
     // }
 
-    const data = await this.userRepository.find();
+    const data = await this.userRepository.find({
+      select: userColumns
+    });
     const total = await this.userRepository.count();
 
     return { data, total };
@@ -83,10 +85,25 @@ export class UsersService {
     }
 
     const user = await this.userRepository.preload(updateUserDto);
-    return await this.userRepository.save(user);
+    if(user.role === PermissionEnum.ADMIN) {
+      // 不能修改管理员的权限
+      throw new BadRequestException('不能修改管理员用户');
+    }
+    const result = await this.userRepository.save(user)
+    result.password = '';
+    return result;
   }
 
-  async remove(ids: number[]) {
-    return await this.userRepository.delete(ids);
+  async remove(id: number) {
+    const user = await this.userRepository.findOne({
+      where: {
+        id
+      }
+    })
+    if(user.role & PermissionEnum.ADMIN) {
+      // 不能删除管理员
+      throw new BadRequestException('不能删除管理员用户');
+    }
+    return await this.userRepository.delete(id);
   }
 }

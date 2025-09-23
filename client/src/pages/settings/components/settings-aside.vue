@@ -6,10 +6,10 @@ const currentPath = computed(() => route.path)
 const activeClass = 'text-primary font-semibold bg-primary/5'
 const links = [
   { path: '/settings/', label: 'Profile', icon: h(User) },
-  { path: '/settings/account', label: 'Account', icon: h(Wrench) },
+  // { path: '/settings/account', label: 'Account', icon: h(Wrench) },
   { path: '/settings/appearance', label: 'Appearance', icon: h(Palette) },
-  { path: '/settings/notifications', label: 'Notifications', icon: h(BellDot) },
-  { path: '/settings/display', label: 'Display', icon: h(PictureInPicture2) },
+  // { path: '/settings/notifications', label: 'Notifications', icon: h(BellDot) },
+  // { path: '/settings/display', label: 'Display', icon: h(PictureInPicture2) },
 ]
 
 const currentLink = computed(() => links.find(link => link.path === currentPath.value))

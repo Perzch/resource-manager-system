@@ -49,7 +49,6 @@ export class AuthService {
   async signIn(signInDto: SignInDto) {
     // 查找用户
     const user = await this.usersService.findByUsername(signInDto.username);
-
     if (!user) {
       throw new UnauthorizedException('用户名或密码错误');
     }

@@ -1,5 +1,7 @@
 import type { App } from 'vue'
 
+import { setupPermissionDirective } from '@/directives/permission'
+
 import { setupAutoAnimate } from './auto-animate'
 import { setupDayjs } from './dayjs'
 import { setupI18n } from './i18n'
@@ -14,4 +16,5 @@ export function setupPlugins(app: App) {
   setupTanstackVueQuery(app)
   setupI18n(app)
   setupPinia(app)
+  setupPermissionDirective(app)
 }

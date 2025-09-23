@@ -7,6 +7,14 @@ import { useGetUsersQuery } from '@/services/api/users.api'
 import { columns } from './components/columns'
 import DataTable from './components/data-table.vue'
 import UserCreate from './components/user-create.vue'
+import { PermissionEnum } from '@/enums/global'
+
+definePage({
+  meta: {
+    auth: true,
+    role: PermissionEnum.MANAGE
+  }
+})
 
 // Fetch users from backend with reactive query
 const { data, isPending } = useGetUsersQuery()
@@ -28,7 +36,8 @@ const loading = computed(() => isPending.value)
     sticky
   >
     <template #actions>
-      <UserCreate />
+      <!-- 只有管理者才能创建用户 -->
+      <UserCreate v-permission="PermissionEnum.MANAGE" />
     </template>
     <div class="overflow-x-auto">
       <DataTable

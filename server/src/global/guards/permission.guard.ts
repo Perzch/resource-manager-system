@@ -24,9 +24,12 @@ export class PermissionGuard implements CanActivate {
     const user = request.user;
     if (user) {
       const queryUser = await this.userService.findOne(user.sub);
+      if(!queryUser.status) return false
       request.user = queryUser;
+      
+      // 修复权限检查逻辑：用户必须拥有所有要求的权限位
       return requiredPermissions.some(
-        (permission) => permission & queryUser.role,
+        (permission) => (queryUser.role & permission) === permission,
       );
     }
     return false;
