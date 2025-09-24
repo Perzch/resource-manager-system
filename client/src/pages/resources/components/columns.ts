@@ -4,7 +4,7 @@ import { h } from 'vue'
 import { Download } from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
 
-import type { ResourceInterface } from '@/types/type'
+import type { ResourceInterface, ResourceStatusEnum } from '@/types/type'
 
 import DataTableColumnHeader from '@/components/data-table/column-header.vue'
 import { SelectColumn } from '@/components/data-table/table-columns'
@@ -17,6 +17,10 @@ import env from '@/utils/env'
 import { useDownloadResourceMutation } from '@/services/api/resources.api'
 
 import DataTableRowActions from './data-table-row-actions.vue'
+import ResourceStatusToggle from './resource-status-toggle.vue'
+import Tooltip from '@/components/ui/tooltip/Tooltip.vue'
+import TooltipTrigger from '@/components/ui/tooltip/TooltipTrigger.vue'
+import TooltipContent from '@/components/ui/tooltip/TooltipContent.vue'
 
 export const columns: ColumnDef<ResourceInterface>[] = [
   SelectColumn as ColumnDef<ResourceInterface>,
@@ -36,7 +40,32 @@ export const columns: ColumnDef<ResourceInterface>[] = [
     header: ({ column }) => h(DataTableColumnHeader<ResourceInterface>, { column, title: 'Description' }),
     cell: ({ row }) => {
       const description = row.getValue('description') as string
-      return h('span', { class: 'text-sm text-muted-foreground max-w-[200px] truncate' }, description || '-')
+      
+      if (!description) {
+        return h('span', { class: 'text-muted-foreground' }, '-')
+      }
+
+      // 截取前30个字符作为显示文本
+      const truncatedText = description.length > 30 
+        ? `${description.substring(0, 30)}...` 
+        : description
+
+      // 使用原生 title 属性显示完整描述
+      return h(Tooltip, {}, {
+        default: () => [
+          h(TooltipTrigger, { asChild: true }, () => 
+            h('span', { 
+              class: 'text-sm text-muted-foreground cursor-help underline-offset-4 hover:underline max-w-[200px] truncate inline-block'
+            }, truncatedText)
+          ),
+          h(TooltipContent, { 
+            class: 'max-w-xs break-words',
+            side: 'top'
+          }, () => 
+            h('p', { class: 'text-sm' }, description)
+          )
+        ]
+      })
     },
     enableSorting: false,
     enableResizing: true,
@@ -121,6 +150,20 @@ export const columns: ColumnDef<ResourceInterface>[] = [
     enableResizing: true,
   },
   {
+    accessorKey: 'status',
+    header: ({ column }) => h(DataTableColumnHeader<ResourceInterface>, { column, title: 'Status' }),
+    cell: ({ row }) => {
+      const resource = row.original as ResourceInterface
+      return h(ResourceStatusToggle, { resource })
+    },
+    filterFn: (row, _id, value) => {
+      const status = row.getValue('status') as ResourceStatusEnum
+      return value.includes(status)
+    },
+    enableSorting: true,
+    enableResizing: true,
+  },
+  {
     accessorKey: 'user',
     header: ({ column }) => h(DataTableColumnHeader<ResourceInterface>, { column, title: 'Owner' }),
     cell: ({ row }) => {
@@ -138,6 +181,11 @@ export const columns: ColumnDef<ResourceInterface>[] = [
         }),
         h('span', { class: 'text-sm' }, username),
       ])
+    },
+    filterFn: (row, _id, value) => {
+      const user = (row.original as any).user
+      const username = user?.username || ''
+      return value.includes(username)
     },
     enableSorting: false,
     enableResizing: true,

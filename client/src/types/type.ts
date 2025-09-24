@@ -1,5 +1,12 @@
 import type { PermissionEnum } from '@/enums/global'
 
+// 资源状态枚举
+export enum ResourceStatusEnum {
+  ACTIVE = 1,
+  INACTIVE = 2,
+  PENDING = 3,
+}
+
 export interface UserInterface {
   id?: number
   avatar?: string
@@ -23,6 +30,7 @@ export interface ResourceInterface {
   description?: string
   icon?: string
   link?: string
+  status?: ResourceStatusEnum
   downloadCount?: number
   createDate?: string
   category?: CategoryInterface

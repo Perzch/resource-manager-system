@@ -37,10 +37,10 @@ async function login() {
     </UiCardHeader>
     <UiCardContent class="grid gap-4">
       <div class="grid gap-2">
-        <UiLabel for="email">
-          Email
+        <UiLabel for="username">
+          username
         </UiLabel>
-        <UiInput id="email" v-model="params.username" type="email" placeholder="m@example.com" />
+        <UiInput id="username" v-model="params.username" type="text" placeholder="username" />
       </div>
       <div class="grid gap-2">
         <div class="flex items-center justify-between">

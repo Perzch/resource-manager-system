@@ -6,6 +6,7 @@ import { z } from 'zod'
 import { ChevronsUpDown, Check } from 'lucide-vue-next'
 
 import type { ResourceInterface, CategoryInterface } from '@/types/type'
+import { useAuthStore } from '@/stores/auth'
 
 import { Button } from '@/components/ui/button'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -13,9 +14,10 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
 import { uploadFileToPresignedUrl, useGetUploadSignatureMutation } from '@/services/api/upload.api'
-import { useCreateResourceMutation, useGetResourcesQuery } from '@/services/api/resources.api'
+import { useCreateResourceMutation, useUpdateResourceMutation, useGetResourcesQuery } from '@/services/api/resources.api'
 import { useGetCategoriesQuery } from '@/services/api/categories.api'
 
 const { resource } = defineProps<{
@@ -36,7 +38,30 @@ const fileUrl = ref<string>(resource?.link || '')
 // Upload API mutations
 const uploadSignatureMutation = useGetUploadSignatureMutation()
 const createResourceMutation = useCreateResourceMutation()
+const updateResourceMutation = useUpdateResourceMutation()
 const getResourcesQuery = useGetResourcesQuery()
+
+// Auth and permissions
+const authStore = useAuthStore()
+
+// Check if current user can edit this resource
+const canEdit = computed(() => {
+  if (!resource) return true // Creating new resource
+  const userRole = authStore.userInfo.role || 0
+  const hasManagePermission = (userRole & 7) === 7
+  const hasAdminPermission = (userRole & 15) === 15
+  const isManager = hasManagePermission || hasAdminPermission
+  return resource.user?.id === authStore.userInfo.id || isManager
+})
+
+// Check if current user can modify status
+const canModifyStatus = computed(() => {
+  if (!resource) return false // Can't modify status when creating
+  const userRole = authStore.userInfo.role || 0
+  const hasManagePermission = (userRole & 7) === 7
+  const hasAdminPermission = (userRole & 15) === 15
+  return canEdit.value && (hasManagePermission || hasAdminPermission)
+})
 
 // Categories query and state
 const categoriesQuery = useGetCategoriesQuery()
@@ -72,6 +97,10 @@ const formSchema = z.object({
   name: z.string().min(1, 'Resource name is required'),
   description: z.string().optional(),
   link: z.string().optional(),
+  status: z.number().optional(),
+  user: z.object({
+    id: z.number().optional()
+  }),
   category: z.object({
     id: z.number().optional(),
     name: z.string().min(1, 'Category is required'),
@@ -86,6 +115,10 @@ const { handleSubmit, setFieldValue } = useForm({
     name: resource?.name || '',
     description: resource?.description || '',
     link: resource?.link || '',
+    status: resource?.status || 3, // Default to PENDING for new resources
+    user: {
+      id: resource?.user?.id
+    },
     category: {
       id: resource?.category?.id,
       name: resource?.category?.name || ''
@@ -176,38 +209,52 @@ async function uploadFile(file: File): Promise<string> {
 
 const onSubmit = handleSubmit(async (values) => {
   const submitResource = { ...values }
-  if (resource) {
-    submitResource.id = resource.id
-  }
-
+  
   // Ensure uploaded files are included in the submission
   if (fileUrl.value) {
     submitResource.link = fileUrl.value
   }
 
-  toast('You submitted the following values:', {
-    description: h(
-      'pre',
-      { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
-      h('code', { class: 'text-white' }, JSON.stringify(submitResource, null, 2)),
-    ),
-  })
-
-  await createResourceMutation.mutateAsync(submitResource)
-  await getResourcesQuery.refetch()
-
-  emits('close')
+  try {
+    if (resource?.id) {
+      // Update existing resource - ensure ID is present
+      submitResource.id = resource.id
+      await updateResourceMutation.mutateAsync(submitResource as any)
+      toast.success('Resource updated successfully')
+    } else {
+      // Create new resource
+      await createResourceMutation.mutateAsync(submitResource)
+      toast.success('Resource created successfully')
+    }
+    
+    await getResourcesQuery.refetch()
+    emits('close')
+  } catch (error) {
+    console.error('Failed to save resource:', error)
+    toast.error(resource?.id ? 'Failed to update resource' : 'Failed to create resource')
+  }
 })
 </script>
 
 <template>
   <form class="space-y-8" @submit="onSubmit">
+    <!-- Warning message if user cannot edit -->
+    <div v-if="resource && !canEdit" class="bg-yellow-50 border border-yellow-200 rounded-md p-4">
+      <p class="text-sm text-yellow-800">
+        ⚠️ You can only edit resources that you own or have management privileges.
+      </p>
+    </div>
+
     <!-- Resource Name -->
     <FormField v-slot="{ componentField }" name="name">
       <FormItem>
         <FormLabel>Resource Name</FormLabel>
         <FormControl>
-          <Input placeholder="Enter resource name" v-bind="componentField" />
+          <Input 
+            placeholder="Enter resource name" 
+            v-bind="componentField" 
+            :disabled="resource && !canEdit"
+          />
         </FormControl>
         <FormMessage />
       </FormItem>
@@ -222,6 +269,7 @@ const onSubmit = handleSubmit(async (values) => {
             placeholder="Enter resource description"
             rows="3"
             v-bind="componentField"
+            :disabled="resource && !canEdit"
           />
         </FormControl>
         <FormMessage />
@@ -240,6 +288,7 @@ const onSubmit = handleSubmit(async (values) => {
                 role="combobox"
                 :aria-expanded="categoryOpen"
                 class="w-full justify-between"
+                :disabled="resource && !canEdit"
               >
                 {{ selectedCategory?.name || 'Select category...' }}
                 <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -278,6 +327,29 @@ const onSubmit = handleSubmit(async (values) => {
       </FormItem>
     </FormField>
 
+    <!-- Status (only for editing and only for managers) -->
+    <FormField v-if="resource && canModifyStatus" name="status" v-slot="{ componentField }">
+      <FormItem>
+        <FormLabel>Status</FormLabel>
+        <FormControl>
+          <Select 
+            :model-value="String(componentField.modelValue || 3)"
+            @update:model-value="(value) => componentField['onUpdate:modelValue']?.(Number(value))"
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="1">Active</SelectItem>
+              <SelectItem value="2">Inactive</SelectItem>
+              <SelectItem value="3" disabled>Pending</SelectItem>
+            </SelectContent>
+          </Select>
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    </FormField>
+
     <!-- Resource File Upload Section -->
     <FormField name="link">
       <FormItem>
@@ -306,7 +378,7 @@ const onSubmit = handleSubmit(async (values) => {
               <Input
                 ref="fileInputRef"
                 type="file"
-                :disabled="fileUploading"
+                :disabled="fileUploading || (resource && !canEdit)"
                 @change="handleFileSelect"
               />
               <span v-if="fileUploading" class="text-sm text-muted-foreground">
@@ -326,9 +398,17 @@ const onSubmit = handleSubmit(async (values) => {
       </Button>
       <Button 
         type="submit" 
-        :disabled="fileUploading || createResourceMutation.isPending.value"
+        :disabled="fileUploading || createResourceMutation.isPending.value || updateResourceMutation.isPending.value || !canEdit"
       >
-        {{ createResourceMutation.isPending.value ? 'Creating...' : 'Create Resource' }}
+        {{ 
+          updateResourceMutation.isPending.value 
+            ? 'Updating...' 
+            : createResourceMutation.isPending.value 
+              ? 'Creating...' 
+              : resource?.id 
+                ? 'Update Resource' 
+                : 'Create Resource' 
+        }}
       </Button>
     </div>
   </form>

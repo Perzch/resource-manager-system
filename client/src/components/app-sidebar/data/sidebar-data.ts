@@ -28,7 +28,8 @@ const teams: Team[] = [
 
 const { navData } = useSidebar()
 
-export const sidebarData: SidebarData = {
+// 使用 computed 使 sidebarData 响应式
+export const sidebarData = computed(() => ({
   teams,
-  navMain: navData.value!,
-}
+  navMain: navData.value || [],
+}) as SidebarData)

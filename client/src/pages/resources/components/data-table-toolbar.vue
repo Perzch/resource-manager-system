@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
 import type { ResourceInterface } from '@/types/type'
-import { useCategoryOptions } from '../data/data'
+import { useCategoryOptions, useStatusOptions, useUserOptions } from '../data/data'
 
 interface DataTableToolbarProps {
   table: Table<ResourceInterface>
@@ -19,6 +19,8 @@ const props = defineProps<DataTableToolbarProps>()
 
 const isFiltered = computed(() => props.table.getState().columnFilters.length > 0)
 const { categoryOptions } = useCategoryOptions()
+const { statusOptions } = useStatusOptions()
+const { userOptions } = useUserOptions()
 </script>
 
 <template>
@@ -36,6 +38,20 @@ const { categoryOptions } = useCategoryOptions()
         :column="table.getColumn('category')"
         title="Category"
         :options="categoryOptions"
+      />
+
+      <DataTableFacetedFilter
+        v-if="table.getColumn('status')"
+        :column="table.getColumn('status')"
+        title="Status"
+        :options="statusOptions"
+      />
+
+      <DataTableFacetedFilter
+        v-if="table.getColumn('user')"
+        :column="table.getColumn('user')"
+        title="User"
+        :options="userOptions"
       />
 
       <Button

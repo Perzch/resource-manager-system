@@ -75,9 +75,9 @@ const onSubmit = handleSubmit(async (values) => {
 
 <template>
   <div class="flex items-center justify-center min-h-screen p-4 min-w-screen">
-    <main class="flex flex-col gap-4">
+    <main class="flex flex-col items-center gap-4 w-1/2">
       <AuthTitle />
-      <UiCard class="max-w-sm mx-auto">
+      <UiCard class="max-w-md w-full mx-auto">
         <UiCardHeader>
           <UiCardTitle class="text-xl">
             Sign Up
@@ -157,7 +157,7 @@ const onSubmit = handleSubmit(async (values) => {
               <span v-else>Create Account</span>
             </UiButton>
 
-            <UiSeparator label="Or continue with" />
+            <!-- <UiSeparator label="Or continue with" />
 
             <div class="flex flex-col items-center justify-between gap-4">
               <GitHubButton />
@@ -169,7 +169,7 @@ const onSubmit = handleSubmit(async (values) => {
               <TermsOfServiceButton />
               and
               <PrivacyPolicyButton />
-            </UiCardDescription>
+            </UiCardDescription> -->
           </form>
         </UiCardContent>
       </UiCard>

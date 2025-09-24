@@ -1,69 +1,80 @@
 import {
-  BadgeHelp,
-  BellDot,
-  Boxes,
-  Bug,
-  Component,
-  CreditCard,
+  ContainerIcon,
+  Layers2,
   LayoutDashboard,
-  ListTodo,
   Palette,
-  PictureInPicture2,
-  Podcast,
   Settings,
   SquareUserRound,
   User,
   Users,
-  Wrench,
 } from 'lucide-vue-next'
 
 import type { NavGroup } from '@/components/app-sidebar/types'
+import { usePermission } from '@/composables/use-permission'
+import { useAuthStore } from '@/stores/auth'
+import { PermissionEnum } from '@/enums/global'
 
 export function useSidebar() {
-  const navData = ref<NavGroup[]>()
+  const { hasPermission } = usePermission()
+  const authStore = useAuthStore()
 
-  navData.value = [
-    {
-      title: 'General',
-      items: [
-        {
-          title: 'Dashboard',
-          url: '/dashboard',
-          icon: LayoutDashboard,
-        },
-        // {
-        //   title: 'Tasks',
-        //   url: '/tasks',
-        //   icon: ListTodo,
-        // },
-        // {
-        //   title: 'Apps',
-        //   url: '/apps',
-        //   icon: Boxes,
-        // },
-        {
-          title: 'Users',
-          url: '/users',
-          icon: Users,
-        },
-        {
-          title: 'Categories',
-          url: '/categories',
-          icon: Component,
-        },
-        {
-          title: 'Resources',
-          url: '/resources',
-          icon: Component,
-        },
-        // {
-        //   title: 'Ai Talk Example',
-        //   url: '/ai-talk',
-        //   icon: Podcast,
-        // },
-      ],
-    },
-    {
+  // 构建导航数据，基于用户权限过滤
+  const navData = computed(() => {
+    // 如果用户未登录，返回空数组
+    if (!authStore.userInfo?.id) {
+      return []
+    }
+    
+    const generalItems = []
+    
+    // Dashboard - 需要 READ 权限
+    if (hasPermission(PermissionEnum.READ)) {
+      generalItems.push({
+        title: 'Dashboard',
+        url: '/dashboard',
+        icon: LayoutDashboard,
+      })
+    }
+    
+    // Users - 需要 MANAGE 权限
+    if (hasPermission(PermissionEnum.MANAGE)) {
+      generalItems.push({
+        title: 'Users',
+        url: '/users',
+        icon: Users,
+      })
+    }
+    
+    // Categories - 需要 WRITE 权限
+    if (hasPermission(PermissionEnum.READ)) {
+      generalItems.push({
+        title: 'Categories',
+        url: '/categories',
+        icon: Layers2,
+      })
+    }
+    
+    // Resources - 需要 READ 权限
+    if (hasPermission(PermissionEnum.READ)) {
+      generalItems.push({
+        title: 'Resources',
+        url: '/resources',
+        icon: ContainerIcon,
+      })
+    }
+
+    const groups: NavGroup[] = []
+    
+    // 只有当有可用项目时才添加 General 组
+    if (generalItems.length > 0) {
+      groups.push({
+        title: 'General',
+        items: generalItems,
+      })
+    }
+
+    // Pages 组 - 这些页面通常对所有用户开放
+    groups.push({
       title: 'Pages',
       items: [
         {
@@ -71,64 +82,35 @@ export function useSidebar() {
           icon: SquareUserRound,
           items: [
             { title: 'Sign In', url: '/auth/sign-in' },
-            // { title: 'Sign In(2 Col)', url: '/auth/sign-in-2' },
             { title: 'Sign Up', url: '/auth/sign-up' },
-            { title: 'Forgot Password', url: '/auth/forgot-password' },
-            // { title: 'OTP', url: '/auth/otp' },
+            // { title: 'Forgot Password', url: '/auth/forgot-password' },
           ],
         },
-        // {
-        //   title: 'Errors',
-        //   icon: Bug,
-        //   items: [
-        //     { title: '401 | Unauthorized', url: '/errors/401' },
-        //     { title: '403 | Forbidden', url: '/errors/403' },
-        //     { title: '404 | Not Found', url: '/errors/404' },
-        //     { title: '500 | Internal Server Error', url: '/errors/500' },
-        //     { title: '503 | Maintenance Error', url: '/errors/503' },
-        //   ],
-        // },
       ],
-    },
-    {
-      title: 'Other',
-      items: [
-        {
-          title: 'Settings',
-          icon: Settings,
-          items: [
-            { title: 'Profile', url: '/settings/', icon: User },
-            // { title: 'Account', url: '/settings/account', icon: Wrench },
-            { title: 'Appearance', url: '/settings/appearance', icon: Palette },
-            // { title: 'Notifications', url: '/settings/notifications', icon: BellDot },
-            // { title: 'Display', url: '/settings/display', icon: PictureInPicture2 },
-          ],
-        },
-        // {
-        //   title: 'SVA Components',
-        //   url: '/sva-components',
-        //   icon: Component,
-        // },
-        // {
-        //   title: 'Help Center',
-        //   url: '/help-center',
-        //   icon: BadgeHelp,
-        // },
-      ],
-    },
-  ]
+    })
+
+    // Settings 组 - 对所有认证用户开放
+    if (authStore.userInfo?.id) {
+      groups.push({
+        title: 'Other',
+        items: [
+          {
+            title: 'Settings',
+            icon: Settings,
+            items: [
+              { title: 'Profile', url: '/settings/', icon: User },
+              { title: 'Appearance', url: '/settings/appearance', icon: Palette },
+            ],
+          },
+        ],
+      })
+    }
+
+    return groups
+  })
 
   const otherPages = ref<NavGroup[]>([
-    // {
-    //   title: 'Other',
-    //   items: [
-    //     {
-    //       title: 'Plans & Pricing',
-    //       icon: CreditCard,
-    //       url: '/billing',
-    //     },
-    //   ],
-    // },
+    // 其他页面可以在这里添加
   ])
 
   return {

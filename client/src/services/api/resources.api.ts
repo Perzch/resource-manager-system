@@ -2,7 +2,7 @@ import type { AxiosError } from 'axios'
 
 import { useMutation, useQuery } from '@tanstack/vue-query'
 
-import type { ResourceInterface } from '@/types/type'
+import type { ResourceInterface, ResourceStatusEnum } from '@/types/type'
 
 import { useAxios } from '@/composables/use-axios'
 
@@ -84,6 +84,17 @@ export function useDownloadResourceMutation() {
     mutationKey: ['downloadResource'],
     mutationFn: async (id: number) => {
       const { data } = await axiosInstance.get(`/resource/download/${id}`)
+      return data
+    },
+  })
+}
+
+export function useUpdateResourceStatusMutation() {
+  const { axiosInstance } = useAxios()
+  return useMutation<ResourceInterface, AxiosError, { id: number, status: ResourceStatusEnum }>({
+    mutationKey: ['updateResourceStatus'],
+    mutationFn: async (payload) => {
+      const { data } = await axiosInstance.patch(`/resource/${payload.id}/status`, { status: payload.status })
       return data
     },
   })

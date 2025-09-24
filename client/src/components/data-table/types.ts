@@ -4,6 +4,8 @@ export interface FacetedFilterOption {
   label: string
   value: boolean | string | number
   icon?: Component
+  avatar?: string // 添加头像支持
+  id?: number | string // 添加ID支持
 }
 
 export interface DataTableProps<T> {

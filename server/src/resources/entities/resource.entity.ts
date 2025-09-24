@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { ResourceInterface } from './resource.interface';
 import { User } from 'src/users/entities/user.entity';
+import { ResourceStatusEnum } from './resource.status.enum';
 
 @Entity()
 export class Resource implements ResourceInterface {
@@ -19,6 +20,8 @@ export class Resource implements ResourceInterface {
   name: string;
   @Column({ nullable: true })
   description?: string;
+  @Column({ default: ResourceStatusEnum.PENDING })
+  status?: ResourceStatusEnum;
   @Column()
   link: string;
   @Column({ default: 0 })
@@ -42,6 +45,7 @@ export const resourceColumns: (keyof Resource)[] = [
   'id',
   'name',
   'description',
+  'status',
   'link',
   'downloadCount',
   'createDate',

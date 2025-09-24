@@ -6,6 +6,9 @@ import { Check, CirclePlus } from 'lucide-vue-next'
 import { cn } from '@/lib/utils'
 
 import type { FacetedFilterOption } from './types'
+import UiAvatar from '@/components/ui/avatar/Avatar.vue'
+import UiAvatarImage from '@/components/ui/avatar/AvatarImage.vue'
+import UiAvatarFallback from '@/components/ui/avatar/AvatarFallback.vue'
 
 interface DataTableFacetedFilter {
   column?: Column<T, any>
@@ -16,7 +19,7 @@ interface DataTableFacetedFilter {
 const props = defineProps<DataTableFacetedFilter>()
 
 const facets = computed(() => props.column?.getFacetedUniqueValues())
-const selectedValues = computed(() => new Set(props.column?.getFilterValue() as string[]))
+const selectedValues = computed(() => new Set(props.column?.getFilterValue() as (string | number | boolean)[]))
 const filterFunction = (list: DataTableFacetedFilter['options'], term: string) => list.filter(i => i.label.toLowerCase()?.includes(term))
 </script>
 
@@ -47,7 +50,7 @@ const filterFunction = (list: DataTableFacetedFilter['options'], term: string) =
               <UiBadge
                 v-for="option in options
                   .filter((option) => selectedValues.has(option.value))"
-                :key="option.value"
+                :key="`${option.value}`"
                 variant="secondary"
                 class="px-1 font-normal rounded-sm"
               >
@@ -68,7 +71,7 @@ const filterFunction = (list: DataTableFacetedFilter['options'], term: string) =
           <UiCommandGroup>
             <UiCommandItem
               v-for="option in options"
-              :key="option.value"
+              :key="`${option.value}`"
               :value="option"
               @select="(e) => {
                 console.log(e.detail.value)
@@ -95,7 +98,16 @@ const filterFunction = (list: DataTableFacetedFilter['options'], term: string) =
               >
                 <Check :class="cn('h-4 w-4', selectedValues.has(option.value) ? 'text-primary-foreground' : '')" />
               </div>
-              <component :is="option.icon" v-if="option.icon" class="size-4 mr-2 text-muted-foreground" />
+              
+              <!-- 头像支持 -->
+              <UiAvatar v-if="option.avatar" class="size-4 mr-2">
+                <UiAvatarImage :src="option.avatar" :alt="option.label" />
+                <UiAvatarFallback class="text-xs">{{ option.label.slice(0, 2).toUpperCase() }}</UiAvatarFallback>
+              </UiAvatar>
+              
+              <!-- 图标支持 -->
+              <component :is="option.icon" v-else-if="option.icon" class="size-4 mr-2 text-muted-foreground" />
+              
               <span>{{ option.label }}</span>
               <span v-if="facets?.get(option.value)" class="flex items-center justify-center size-4 ml-auto font-mono text-xs">
                 {{ facets.get(option.value) }}

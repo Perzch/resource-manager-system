@@ -1,0 +1,10 @@
+- 前端运行命令
+  - pnpm start:client
+  - 运行端口为5173
+- 后端运行命令
+  - pnpm start:server
+  - 运行端口为3000
+- docker运行命令
+  - docker compose up -d
+  - minio端口为9000
+  - postgres端口为5432

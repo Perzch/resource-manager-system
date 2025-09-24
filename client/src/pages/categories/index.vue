@@ -12,7 +12,7 @@ import DataTable from './components/data-table.vue'
 definePage({
   meta: {
     auth: true,
-    role: PermissionEnum.WRITE
+    role: PermissionEnum.READ
   }
 })
 
@@ -34,7 +34,9 @@ const loading = computed(() => isPending.value)
   >
     <template #actions>
       <!-- 只有管理者才能创建分类 -->
-      <CategoryCreate v-permission="PermissionEnum.WRITE" />
+       <div v-permission="PermissionEnum.WRITE">
+         <CategoryCreate />
+       </div>
     </template>
     <div class="overflow-x-auto">
       <DataTable
