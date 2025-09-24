@@ -2,6 +2,7 @@
 import type { HTMLAttributes } from 'vue'
 import { useVModel } from '@vueuse/core'
 import { cn } from '@/lib/utils'
+import { toast } from 'vue-sonner';
 
 const props = defineProps<{
   class?: HTMLAttributes['class']
@@ -17,6 +18,19 @@ const modelValue = useVModel(props, 'modelValue', emits, {
   passive: true,
   defaultValue: props.defaultValue,
 })
+
+watch(
+  () => modelValue.value,
+  (value) => {
+    if(value) {
+      if(value.toString().length > 300) {
+        toast.error('最多只能输入300个字符')
+        modelValue.value = value.toString().slice(0, 300)
+      }
+    }
+  },
+  { immediate: true },
+)
 </script>
 
 <template>

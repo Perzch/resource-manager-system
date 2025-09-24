@@ -1,4 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, Max, MaxLength } from 'class-validator';
 import { Category } from 'src/categories/entities/category.entity';
 import {
   Column,
@@ -19,6 +19,7 @@ export class Resource implements ResourceInterface {
   @IsNotEmpty({ message: '资源名称不能为空' })
   name: string;
   @Column({ nullable: true })
+  @MaxLength(300, { message: '资源描述不能超过300个字符' })
   description?: string;
   @Column({ default: ResourceStatusEnum.PENDING })
   status?: ResourceStatusEnum;
