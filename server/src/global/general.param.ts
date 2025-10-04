@@ -1,11 +1,6 @@
 import { IsArray, IsOptional, Min } from 'class-validator';
 
 export class GeneralParam<T> {
-  @Min(1)
-  page?: number = 1;
-
-  @Min(1)
-  limit?: number = 10;
 
   sort?: 'asc' | 'desc' = 'asc';
 

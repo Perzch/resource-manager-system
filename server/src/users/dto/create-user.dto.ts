@@ -9,6 +9,8 @@ export class CreateUserDto implements UserInterface {
   @IsNotEmpty({ message: '用户名不能为空' })
   username: string;
 
+  avatar?: string;
+
   password: string;
 
   @IsOptional()

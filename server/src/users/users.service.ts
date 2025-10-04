@@ -31,29 +31,6 @@ export class UsersService {
   }
 
   async findAll() {
-    // const where: FindOptionsWhere<User> = {
-    //   username: Like(`%${query.username || ''}%`),
-    // };
-
-    // const options: FindManyOptions<User> = {
-    //   where,
-    //   select: userColumns.filter(
-    //     (col) => query.columns?.includes(col) || !query.columns,
-    //   ),
-    //   order: {
-    //     [query.sortColumn || 'id']: query.sort || 'asc',
-    //   },
-    //   skip: (query.page - 1) * query.limit,
-    //   take: query.limit,
-    // };
-
-    // 处理列选择,只有在columns存在且长度大于0时才处理
-    // if (query.columns && query.columns.length) {
-    //   options.select = query.columns.filter(col => userColumns.includes(col));
-    // } else {
-    //   options.select = userColumns;
-    // }
-
     const data = await this.userRepository.find({
       select: userColumns
     });

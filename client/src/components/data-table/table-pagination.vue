@@ -30,7 +30,7 @@ defineProps<DataTablePaginationProps>()
             <UiSelectValue :placeholder="`${table.getState().pagination.pageSize}`" />
           </UiSelectTrigger>
           <UiSelectContent side="top">
-            <UiSelectItem v-for="pageSize in [10, 20, 30, 40, 50]" :key="pageSize" :value="`${pageSize}`">
+            <UiSelectItem v-for="pageSize in [10, 20, 30, 40, 50, 100, 200, 500]" :key="pageSize" :value="`${pageSize}`">
               {{ pageSize }}
             </UiSelectItem>
           </UiSelectContent>

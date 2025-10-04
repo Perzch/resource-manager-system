@@ -29,8 +29,6 @@ export class CategoryService {
       order: {
         [query.sortColumn || 'id']: query.sort || 'asc',
       },
-      skip: (query.page - 1) * query.limit,
-      take: query.limit,
     };
     // 处理列选择,只有在columns存在且长度大于0时才处理
     // if(query.columns && query.columns.length) {

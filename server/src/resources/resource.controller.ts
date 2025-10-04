@@ -50,6 +50,10 @@ export class ResourceController {
   @Get('download/:id')
   @IsPermission(PermissionEnum.READ)
   async download(@Param('id') id: string) {
+    const resource = await this.findOne(id)
+    if(resource.status !== ResourceStatusEnum.ACTIVE) {
+      throw new BadRequestException('资源未激活，无法下载');
+    }
     return await this.productsService.download(+id);
   }
 

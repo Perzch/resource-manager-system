@@ -12,6 +12,7 @@ export class CreateResourceDto implements ResourceInterface {
   name: string;
   description?: string;
   icon?: string;
+  @IsNotEmpty({ message: '资源链接不能为空' })
   link?: string;
   @IsNotEmptyObject()
   @IsCategoryValid({ message: '分类信息必须包含有效的 id 或 name 属性' })

@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { CategoryInterface } from './category.interface';
+import { MaxLength } from 'class-validator';
 
 @Entity()
 export class Category implements CategoryInterface {
@@ -17,6 +18,7 @@ export class Category implements CategoryInterface {
   @Column({
     nullable: true,
   })
+  @MaxLength(255, { message: '推荐语不能超过255个字符' })
   recommend?: string;
   @CreateDateColumn()
   createDate?: Date;

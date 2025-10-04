@@ -32,6 +32,11 @@ export function generateVueTable<T>(props: DataTableProps<T>) {
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
+    initialState: {
+      pagination: {
+        pageSize: 10, // 设置默认每页显示10条记录
+      },
+    },
   })
   return table
 }

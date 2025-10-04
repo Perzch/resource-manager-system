@@ -100,7 +100,7 @@ const formSchema = z.object({
   status: z.number().optional(),
   user: z.object({
     id: z.number().optional()
-  }),
+  }).optional(),
   category: z.object({
     id: z.number().optional(),
     name: z.string().min(1, 'Category is required'),
@@ -189,7 +189,7 @@ async function handleFileSelect(event: Event) {
 
 async function uploadFile(file: File): Promise<string> {
   // Extract file extension from file type or name
-  const fileExtension = file.type.split('/')[1] || file.name.split('.').pop() || 'bin'
+  const fileExtension = file.name.split('.').pop() || ''
 
   // Step 1: Get upload signature
   fileUploadProgress.value = 20
@@ -213,6 +213,10 @@ const onSubmit = handleSubmit(async (values) => {
   // Ensure uploaded files are included in the submission
   if (fileUrl.value) {
     submitResource.link = fileUrl.value
+  }
+
+  if(!submitResource.user.id) {
+    submitResource.user = undefined
   }
 
   try {

@@ -62,13 +62,27 @@ export class ResourceService {
       const canSeeAllResources = hasManagePermission || hasAdminPermission;
       
       if (!canSeeAllResources) {
-        // 普通用户只能看到 ACTIVE 状态的资源和自己上传的所有资源
-        // 使用数组形式实现 OR 查询
-        const activeWhere = { ...where, status: ResourceStatusEnum.ACTIVE };
-        const userWhere = { ...where, user: { id: user.id } };
+        // 普通用户只能看到：
+        // 1. 所有 ACTIVE 状态的资源（公开资源）
+        // 2. 自己上传的所有状态的资源
+        delete where.user; // 移除原有的 user 过滤条件
+        
+        const conditions = [];
+        
+        // 条件1：所有 ACTIVE 状态的资源
+        conditions.push({
+          ...where,
+          status: ResourceStatusEnum.ACTIVE
+        });
+        
+        // 条件2：自己上传的所有资源（不限状态）
+        conditions.push({
+          ...where,
+          user: { id: user.id }
+        });
         
         const searchOptions: FindManyOptions<Resource> = {
-          where: [activeWhere, userWhere],
+          where: conditions,
           select: resourceColumns.filter(
             (col) => query.columns?.includes(col) || !query.columns,
           ),
@@ -77,8 +91,9 @@ export class ResourceService {
             [query.sortColumn || 'id']: query.sort || 'ASC',
           },
         };
+        
         const data = await this.resourceRepository.find(searchOptions);
-        const total = await this.resourceRepository.count({ where: [activeWhere, userWhere] });
+        const total = await this.resourceRepository.count({ where: conditions });
         return { data, total };
       }
       // 如果有管理权限或管理员权限，继续执行下面的代码，可以看到所有资源

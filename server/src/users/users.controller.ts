@@ -23,11 +23,12 @@ export class UsersController {
   @IsPermission(PermissionEnum.MANAGE)
   async create(@Body() createUserDto: CreateUserDto) { 
     createUserDto.password ??= '123456';
+    createUserDto.avatar ??= `avatar/avatar-${Math.floor(Math.random() * 11)}.png`;
     return await this.usersService.create(createUserDto);
   }
 
   @Get()
-  @IsPermission(PermissionEnum.MANAGE)
+  @IsPermission(PermissionEnum.READ)
   async findAll() {
     return await this.usersService.findAll();
   }

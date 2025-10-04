@@ -58,23 +58,9 @@ async function login() {
       >
         {{ loginMutation.isPending.value ? 'Logging in...' : 'Login' }}
       </UiButton>
-
-      <!-- <UiSeparator label="Or continue with" /> -->
-
-      <!-- <div class="flex flex-col items-center justify-between gap-4">
-        <GitHubButton />
-        <GoogleButton />
-      </div> -->
-
-      <!-- <UiCardDescription>
-        By clicking login, you agree to our
-        <TermsOfServiceButton />
-        and
-        <PrivacyPolicyButton />
-      </UiCardDescription> -->
     </UiCardContent>
   </UiCard>
-</template>
+</template>   
 
 <style scoped>
 
